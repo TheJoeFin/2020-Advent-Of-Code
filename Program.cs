@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace _2020_Advent_Of_Code
 {
@@ -10,16 +11,24 @@ namespace _2020_Advent_Of_Code
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            foreach (int i in intList)
+
+            var intListSorted = intList.OrderBy(x => x).ToList();
+
+            for (int i = 0; i < intList.Count(); i++)
             {
-                foreach (int j in intList)
+                for (int j = i; j < intList.Count(); j++)
                 {
-                    foreach (int k in intList)
+                    for (int k = j; k < intList.Count(); k++)
                     {
-                        if (i != j && j != k)
+                        int ii = intList[i];
+                        int jj = intList[j];
+                        int kk = intList[k];
+
+                        if (ii != jj && jj != kk)
                         {
-                            if (i + j + k == 2020)
-                                Console.WriteLine($"num1: {i} num2: {j} num3: {k} product={i * j * k}");
+                            if (ii + jj + kk == 2020)
+                                Console.WriteLine($"num1: {ii} num2: {jj} num3: {kk} product={ii * jj * kk}");
+
                         }
                     }
 
@@ -27,6 +36,9 @@ namespace _2020_Advent_Of_Code
             }
             stopwatch.Stop();
             Console.WriteLine($"{stopwatch.ElapsedMilliseconds}ms");
+
+            // First correct run: 253ms
+            // Second correct run: 108ms
         }
         private static List<int> intList = new List<int>()
           {
