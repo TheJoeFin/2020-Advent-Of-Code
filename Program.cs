@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace _2020_Advent_Of_Code
 {
@@ -6,23 +8,27 @@ namespace _2020_Advent_Of_Code
     {
         static void Main(string[] args)
         {
-            foreach(int i in intList)
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            foreach (int i in intList)
             {
-              foreach(int j in intList)
-              {
-                foreach(int k in intList)
+                foreach (int j in intList)
                 {
-                  if(i != j && j != k)
-                  {
-                    if(i+j+k == 2020)
-                      Console.WriteLine($"num1: {i} num2: {j} num3: {k} product={i*j*k}");
-                  }
-                }
+                    foreach (int k in intList)
+                    {
+                        if (i != j && j != k)
+                        {
+                            if (i + j + k == 2020)
+                                Console.WriteLine($"num1: {i} num2: {j} num3: {k} product={i * j * k}");
+                        }
+                    }
 
-              }
+                }
             }
+            stopwatch.Stop();
+            Console.WriteLine($"{stopwatch.ElapsedMilliseconds}ms");
         }
-          private static List<int> intList = new List<int>()
+        private static List<int> intList = new List<int>()
           {
             1977,
             1802,
