@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Reflection;
+using System.IO;
 
 namespace _2020_Advent_Of_Code
 {
@@ -78,6 +79,8 @@ namespace _2020_Advent_Of_Code
     {
         public static void Run()
         {
+            string inputString = File.ReadAllText($"Input Files\\{MethodBase.GetCurrentMethod().DeclaringType.ToString().Split('.').LastOrDefault()}Input.txt");
+
             List<string> splitInput = inputString.Split((char)(Environment.NewLine).FirstOrDefault()).ToList();
 
             List<Passport> AllPassports = new List<Passport>();
@@ -237,7 +240,7 @@ namespace _2020_Advent_Of_Code
     ";
 
 
-        private static string inputString =
+        private static string OLDinputString =
         @"
     iyr:2015
     hgt:59cm byr:2029 cid:219 pid:9381688753 eyr:1992 hcl:#b6652a
