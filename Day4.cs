@@ -129,7 +129,7 @@ namespace _2020_Advent_Of_Code
                                 string heightInt = propKeyAndValue[1].Replace("cm", "");
                                 int.TryParse(heightInt, out int parsedInt);
 
-                                if (parsedInt >= 150 || parsedInt <= 193)
+                                if (parsedInt >= 150 && parsedInt <= 193)
                                     newPassport.HeightCM = parsedInt;
                             }
                             else if (propKeyAndValue[1].Contains("in"))
@@ -137,7 +137,7 @@ namespace _2020_Advent_Of_Code
                                 string heightInt = propKeyAndValue[1].Replace("in", "");
                                 int.TryParse(heightInt, out int parsedInt);
 
-                                if (parsedInt >= 59 || parsedInt <= 76)
+                                if (parsedInt >= 59 && parsedInt <= 76)
                                     newPassport.HeightCM = parsedInt;
                             }
 
@@ -195,7 +195,7 @@ namespace _2020_Advent_Of_Code
 
             foreach (var pp in GoodPassports.Take(5))
             {
-                Console.WriteLine(pp);
+                // Console.WriteLine(pp);
             }
 
             Console.WriteLine($"There are {numberOfPassportsWithAllProps} complete passports");
