@@ -9,7 +9,7 @@ namespace _2020_Advent_Of_Code
     {
         static void Main(string[] args)
         {
-            Day4.Run();
+            Day5.Run();
         }
     }
 }

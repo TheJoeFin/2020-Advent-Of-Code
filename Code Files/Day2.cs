@@ -26,7 +26,7 @@ namespace _2020_Advent_Of_Code
                 int.TryParse(rangeAsStrings[0], out int positionOne);
                 int.TryParse(rangeAsStrings[1], out int positionTwo);
 
-                int countOfRqrdChar = 0;
+                // int countOfRqrdChar = 0;
 
                 bool posOneCheck = false;
                 bool posTwoCheck = false;
