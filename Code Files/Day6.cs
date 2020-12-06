@@ -7,9 +7,13 @@ using System.Reflection;
 
 namespace _2020_Advent_Of_Code
 {
-    abstract class AdventDay
+    abstract class Day6
     {
-        public abstract void Run();
+        public static void Run()
+        {
+            string inputString = File.ReadAllText($"Input Files\\{MethodBase.GetCurrentMethod().DeclaringType.ToString().Split('.').LastOrDefault()}Input.txt");
+
+        }
 
 
     }
