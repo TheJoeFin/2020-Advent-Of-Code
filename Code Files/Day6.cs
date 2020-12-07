@@ -21,7 +21,7 @@ namespace _2020_Advent_Of_Code
 
         public static void Run()
         {
-            string inputString = File.ReadAllText($"Input Files\\{MethodBase.GetCurrentMethod().DeclaringType.ToString().Split('.').LastOrDefault()}Input.txt");
+            string inputString = File.ReadAllText($"Input Files/Day6Input.txt");
 
             string testString = @"
 abc

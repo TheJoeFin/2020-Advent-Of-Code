@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace _2020_Advent_Of_Code
 {
-    public record AirplaneRow
+    public class AirplaneRow
     {
         public int RowID { get; set; } = 0;
 
