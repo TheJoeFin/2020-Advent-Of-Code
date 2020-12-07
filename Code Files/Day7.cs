@@ -7,12 +7,65 @@ using System.Reflection;
 
 namespace _2020_Advent_Of_Code
 {
+    public class Bag
+    {
+        public string Appearance { get; set; } = "";
+
+        public string Contents { get; set; } = "";
+
+        public override string ToString()
+        {
+            return $"{Appearance} bag contains {Contents}";
+        }
+    }
+
+
     public static class Day7
     {
+        public const string TestString =
+            @"
+            light red bags contain 1 bright white bag, 2 muted yellow bags.
+            dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+            bright white bags contain 1 shiny gold bag.
+            muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+            shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+            dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+            vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+            faded blue bags contain no other bags.
+            dotted black bags contain no other bags.";
+
         public static void Run()
         {
             string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
 
+            List<Bag> bags = ConvertToBags(inputString);
+
+            foreach (Bag bag in bags)
+            {
+                Console.WriteLine(bag.ToString());
+            }
+        }
+
+        public static List<Bag> ConvertToBags(string listOfBags)
+        {
+            List<Bag> returnList = new List<Bag>();
+
+            foreach (string bagDescription in listOfBags.ReadLines())
+            {
+                string[] wordArray = bagDescription.Trim().Split();
+
+                Bag newBag = new Bag();
+                newBag.Appearance = $"{wordArray[0]} {wordArray[1]}";
+
+                for (int i = 4; i < (wordArray.Count() - 1); i++)
+                {
+                    newBag.Contents += $"{wordArray[i]} ";
+                }
+
+                returnList.Add(newBag);
+            }
+
+            return returnList;
         }
     }
 }
