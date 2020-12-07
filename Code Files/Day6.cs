@@ -8,6 +8,35 @@ using System.Reflection;
 namespace _2020_Advent_Of_Code
 {
 
+    public class BoardingGroup
+    {
+        public HashSet<char> YesAnswers { get; set; } = new HashSet<char>();
+        public List<string> ListOfPersonAnswers { get; set; } = new List<string>();
+        public int AllYesAnswers 
+        { 
+            get
+            {
+                int numberOfYes = 0;
+                
+                foreach (char yesAns in YesAnswers)
+                {
+                    bool YesToAll = true;
+
+                    foreach (string personAnswer in ListOfPersonAnswers)
+                    {
+                        if(personAnswer.Contains(yesAns) == false)
+                            YesToAll = false;
+                    }
+
+                    if(YesToAll)
+                        numberOfYes++;
+                }
+
+                return numberOfYes;
+            }
+        }
+    }
+    
     public static class Day6
     {
 
@@ -42,20 +71,51 @@ b
             ";
 
 
-            List<string> inputList = ConvertStringToListOfStrings(inputString);
+            // List<string> inputList = ConvertStringToListOfStrings(inputString);
 
-            int total = 0;
+            // int total = 0;
 
-            foreach (string customsAnswers in inputList)
+            List<BoardingGroup> EveryoneOnThePlane = new List<BoardingGroup>();
+
+            BoardingGroup newBoardingGroup = new BoardingGroup();
+
+            int totalCommonYes = 0;
+
+            foreach (string singleLine in inputString.ReadLines())
             {
-                HashSet<char> uniqueLetters = new HashSet<char>(customsAnswers.Trim());
-                int countYes = uniqueLetters.Count();
+                string cleanLine = singleLine.Trim();
+
+                // HashSet<char> uniqueLetters = new HashSet<char>(customsAnswers.Trim());
+                // int countYes = uniqueLetters.Count();
                 // Console.WriteLine($"Number of Yes: {countYes} - {customsAnswers}");
 
-                total += countYes;
+                if(cleanLine != string.Empty)
+                {
+                    newBoardingGroup.ListOfPersonAnswers.Add(cleanLine);
+
+                    foreach (char cleanStringChar in cleanLine.ToCharArray())
+                    {
+                        newBoardingGroup.YesAnswers.Add(cleanStringChar);
+                    }
+                }
+
+                if(cleanLine == string.Empty && newBoardingGroup.ListOfPersonAnswers.Count() > 0)
+                {
+                    totalCommonYes += newBoardingGroup.AllYesAnswers;
+                    EveryoneOnThePlane.Add(newBoardingGroup);
+
+                    newBoardingGroup = new BoardingGroup();
+                }
+
+                // total += countYes;
             }
 
-            Console.WriteLine($"Total: {total}");
+            if(newBoardingGroup.ListOfPersonAnswers.Count() > 0)
+            {
+                totalCommonYes += newBoardingGroup.AllYesAnswers;
+            }
+
+            Console.WriteLine($"Total: {totalCommonYes}");
         }
 
         private static List<string> ConvertStringToListOfStrings(string input)
