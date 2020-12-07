@@ -42,22 +42,49 @@ b
             ";
 
 
-            List<string> inputList = new List<string>();
+            List<string> inputList = ConvertStringToListOfStrings(inputString);
 
-            foreach (string stringLine in testString.ReadLines())
-            {
-                if (string.IsNullOrWhiteSpace(stringLine) == false)
-                    Console.WriteLine(stringLine);
-            }
+            int total = 0;
 
             foreach (string customsAnswers in inputList)
             {
                 HashSet<char> uniqueLetters = new HashSet<char>(customsAnswers.Trim());
                 int countYes = uniqueLetters.Count();
-                Console.WriteLine($"Number of Yes: {countYes}");
+                // Console.WriteLine($"Number of Yes: {countYes} - {customsAnswers}");
+
+                total += countYes;
             }
+
+            Console.WriteLine($"Total: {total}");
         }
 
+        private static List<string> ConvertStringToListOfStrings(string input)
+        {
+            List<string> returnList = new List<string>();
+
+            string stringLine = "";
+
+            foreach (string singleRead in input.ReadLines())
+            {
+
+                if (string.IsNullOrWhiteSpace(singleRead) == false)
+                {
+                    stringLine += singleRead;
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(stringLine) == false)
+                        returnList.Add(stringLine);
+
+                    stringLine = string.Empty;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(stringLine) == false)
+                returnList.Add(stringLine);
+
+            return returnList;
+        }
 
     }
 }
