@@ -7,11 +7,12 @@ using System.Reflection;
 
 namespace _2020_Advent_Of_Code
 {
-    public static class DayNUM
+    public static class Day7
     {
         public static void Run()
         {
-            throw new NotImplementedException();
+            string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
+
         }
     }
 }
