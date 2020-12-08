@@ -40,12 +40,52 @@ namespace _2020_Advent_Of_Code
 
             string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
 
-            List<Bag> bags = ConvertToBags(TestString);
+            List<Bag> bags = ConvertToBags(inputString);
 
             foreach (Bag bag in bags)
             {
-                Console.WriteLine(bag.ToString());
+                // Console.WriteLine(bag.ToString());
             }
+
+            int numberOfBagsContainingGold = lookForBags("shiny gold", bags);
+
+            Console.WriteLine($"Number of bags holding shiny Gold {numberOfBagsContainingGold}");
+        }
+
+        private static int lookForBags(string v, List<Bag> bags)
+        {
+            int matches = 0;
+
+            foreach (Bag bag in bags)
+            {
+                if (containsMatch(v, bag, bags))
+                    matches++;
+            }
+
+            return matches;
+        }
+
+        private static bool containsMatch(string v, Bag bag, List<Bag> bags)
+        {
+            bool doesContainMatch = false;
+
+            foreach ((int num, string desc) in bag.Contents)
+            {
+                if (num > 0)
+                {
+                    if (desc == v)
+                        doesContainMatch = true;
+                    else
+                    {
+                        Bag bagR = bags.Where(b => b.Appearance == desc).FirstOrDefault();
+
+                        if (bagR != null)
+                            doesContainMatch = containsMatch(v, bagR, bags);
+                    }
+                }
+            }
+
+            return doesContainMatch;
         }
 
         public static List<Bag> ConvertToBags(string listOfBags)
