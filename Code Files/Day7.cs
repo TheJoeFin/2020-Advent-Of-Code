@@ -34,12 +34,20 @@ namespace _2020_Advent_Of_Code
             faded blue bags contain no other bags.
             dotted black bags contain no other bags.";
 
+        public const string Part2TestString =
+        @"shiny gold bags contain 2 dark red bags.
+          dark red bags contain 2 dark orange bags.
+          dark orange bags contain 2 dark yellow bags.
+          dark yellow bags contain 2 dark green bags.
+          dark green bags contain 2 dark blue bags.
+          dark blue bags contain 2 dark violet bags.
+          dark violet bags contain no other bags.";
+
         public static void Run()
         {
             Console.WriteLine($"Running {DateTime.Now.ToShortTimeString()}");
 
             string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
-
             List<string> inputStringList = inputString.ReadLines().ToList();
 
             HashSet<string> inputMatches = new HashSet<string>();
@@ -49,15 +57,6 @@ namespace _2020_Advent_Of_Code
             int simpleMatchNumber = simpleMatches.Count();
             // subtract 1 because "shiny gold" was the first entry
             simpleMatchNumber--;
-
-            List<Bag> bags = ConvertToBags(inputString);
-
-            foreach (Bag bag in bags)
-            {
-                // Console.WriteLine(bag.ToString());
-            }
-
-            int numberOfBagsContainingGold = lookForBags("shiny gold", bags);
 
             //Console.WriteLine($"Number of bags holding shiny Gold {numberOfBagsContainingGold}");
             Console.WriteLine($"Simple text match {simpleMatchNumber}");
