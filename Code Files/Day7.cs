@@ -36,7 +36,7 @@ namespace _2020_Advent_Of_Code
 
         public static void Run()
         {
-            Console.WriteLine("Running");
+            Console.WriteLine($"Running {DateTime.Now.ToShortTimeString()}");
 
             string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
 
@@ -46,11 +46,9 @@ namespace _2020_Advent_Of_Code
             inputMatches.Add("shiny gold");
 
             HashSet<string> simpleMatches = simpleTextMatch(inputStringList, inputMatches);
-            foreach (string simpleMatch in simpleMatches)
-            {
-                Console.WriteLine($"sm: {simpleMatch}");
-            }
             int simpleMatchNumber = simpleMatches.Count();
+            // subtract 1 because "shiny gold" was the first entry
+            simpleMatchNumber--;
 
             List<Bag> bags = ConvertToBags(inputString);
 
@@ -61,7 +59,7 @@ namespace _2020_Advent_Of_Code
 
             int numberOfBagsContainingGold = lookForBags("shiny gold", bags);
 
-            Console.WriteLine($"Number of bags holding shiny Gold {numberOfBagsContainingGold}");
+            //Console.WriteLine($"Number of bags holding shiny Gold {numberOfBagsContainingGold}");
             Console.WriteLine($"Simple text match {simpleMatchNumber}");
         }
 
