@@ -11,7 +11,7 @@ namespace _2020_Advent_Of_Code
     {
         public string Appearance { get; set; } = "";
 
-        public string Contents { get; set; } = "";
+        public List<(int bagNumber, string bagDescription)> Contents { get; set; } = new List<(int bagNumber, string bagDescription)>();
 
         public override string ToString()
         {
@@ -36,9 +36,11 @@ namespace _2020_Advent_Of_Code
 
         public static void Run()
         {
+            Console.WriteLine("Running");
+
             string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
 
-            List<Bag> bags = ConvertToBags(inputString);
+            List<Bag> bags = ConvertToBags(TestString);
 
             foreach (Bag bag in bags)
             {
@@ -52,14 +54,27 @@ namespace _2020_Advent_Of_Code
 
             foreach (string bagDescription in listOfBags.ReadLines())
             {
+                if (string.IsNullOrWhiteSpace(bagDescription))
+                    continue;
+
                 string[] wordArray = bagDescription.Trim().Split();
 
                 Bag newBag = new Bag();
                 newBag.Appearance = $"{wordArray[0]} {wordArray[1]}";
-
+                string contentsString = "";
                 for (int i = 4; i < (wordArray.Count() - 1); i++)
                 {
-                    newBag.Contents += $"{wordArray[i]} ";
+                    contentsString += $"{wordArray[i]} ";
+                }
+
+                string[] bagsStrings = contentsString.Split(',');
+
+                foreach (string bagString in bagsStrings)
+                {
+                    string[] bagDetails = bagString.Split();
+                    int bagQty = 0;
+                    int.TryParse(bagDetails[0], out bagQty);
+                    newBag.Contents.Add((bagQty, $"{bagDetails[1]} {bagDetails[2]}"));
                 }
 
                 returnList.Add(newBag);
