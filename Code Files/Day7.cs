@@ -40,6 +40,18 @@ namespace _2020_Advent_Of_Code
 
             string inputString = File.ReadAllText($"Input Files/Day7Input.txt");
 
+            List<string> inputStringList = inputString.ReadLines().ToList();
+
+            HashSet<string> inputMatches = new HashSet<string>();
+            inputMatches.Add("shiny gold");
+
+            HashSet<string> simpleMatches = simpleTextMatch(inputStringList, inputMatches);
+            foreach (string simpleMatch in simpleMatches)
+            {
+                Console.WriteLine($"sm: {simpleMatch}");
+            }
+            int simpleMatchNumber = simpleMatches.Count();
+
             List<Bag> bags = ConvertToBags(inputString);
 
             foreach (Bag bag in bags)
@@ -50,6 +62,37 @@ namespace _2020_Advent_Of_Code
             int numberOfBagsContainingGold = lookForBags("shiny gold", bags);
 
             Console.WriteLine($"Number of bags holding shiny Gold {numberOfBagsContainingGold}");
+            Console.WriteLine($"Simple text match {simpleMatchNumber}");
+        }
+
+        private static HashSet<string> simpleTextMatch(List<string> listOfStrings, HashSet<string> matches)
+        {
+            HashSet<string> returnHashSet = new HashSet<string>();
+
+            foreach (var item in matches)
+            {
+                returnHashSet.Add(item);
+            }
+
+            // How many in the list hold the target (not  counting the target)
+            foreach (string hashString in matches)
+            {
+                foreach (string line in listOfStrings)
+                {
+                    string desc = String.Join(" ", line.Trim().Split().Take(2));
+
+                    if (line.Contains(hashString) && desc != hashString)
+                        returnHashSet.Add(desc);
+                }
+
+            }
+
+            if (returnHashSet.Count() != matches.Count())
+            {
+                returnHashSet = simpleTextMatch(listOfStrings, returnHashSet);
+            }
+
+            return returnHashSet;
         }
 
         private static int lookForBags(string v, List<Bag> bags)
@@ -80,7 +123,7 @@ namespace _2020_Advent_Of_Code
                         Bag bagR = bags.Where(b => b.Appearance == desc).FirstOrDefault();
 
                         if (bagR != null)
-                            doesContainMatch = containsMatch(v, bagR, bags);
+                            doesContainMatch = containsMatch(bagR.Appearance, bagR, bags);
                     }
                 }
             }
