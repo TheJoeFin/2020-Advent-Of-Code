@@ -17,6 +17,16 @@ namespace _2020_Advent_Of_Code
         {
             return $"{Appearance} bag contains {Contents}";
         }
+
+        public Bag()
+        {
+
+        }
+
+        public Bag(string stringLine)
+        {
+
+        }
     }
 
 
@@ -60,6 +70,65 @@ namespace _2020_Advent_Of_Code
 
             //Console.WriteLine($"Number of bags holding shiny Gold {numberOfBagsContainingGold}");
             Console.WriteLine($"Simple text match {simpleMatchNumber}");
+
+            List<Bag> bags = ConvertToBags(inputString);
+            int countShinyGoldContents = NumberOfBagsInShinyGold(bags);
+            Console.WriteLine($"Number of bags inside Shiny Gold {countShinyGoldContents}");
+
+
+        }
+
+        private static int NumberOfBagsInShinyGold(List<Bag> bags)
+        {
+            int shinyContentsCount = 0;
+
+            Bag shinyGold = bags.Where(b => b.Appearance == "shiny gold").FirstOrDefault();
+
+            foreach ((int qty, string desc) pair in shinyGold.Contents)
+            {
+                shinyContentsCount += pair.qty;
+
+                if (pair.qty > 0)
+                {
+                    int subContents = BagContents(pair.desc, bags);
+
+                    if (subContents > 0)
+                        shinyContentsCount += (pair.qty * subContents);
+                    else
+                        shinyContentsCount += pair.qty;
+                }
+
+            }
+
+            return shinyContentsCount;
+        }
+
+        private static int BagContents(string desc, List<Bag> bags)
+        {
+            int contentsNumber = 0;
+
+            Bag bag = bags.Where(b => b.Appearance == desc).FirstOrDefault();
+
+            if (bag != null)
+            {
+                if (bag.Contents.Count() > 0)
+                {
+                    foreach ((int qty, string desc) pair in bag.Contents)
+                    {
+                        int subContents = BagContents(pair.desc, bags);
+
+                        if (subContents > 0)
+                        {
+                            contentsNumber += pair.qty;
+                            contentsNumber += (pair.qty * subContents);
+                        }
+                        else
+                            contentsNumber += pair.qty;
+                    }
+                }
+            }
+
+            return contentsNumber;
         }
 
         private static HashSet<string> simpleTextMatch(List<string> listOfStrings, HashSet<string> matches)
@@ -151,10 +220,13 @@ namespace _2020_Advent_Of_Code
 
                 foreach (string bagString in bagsStrings)
                 {
-                    string[] bagDetails = bagString.Split();
+                    string[] bagDetails = bagString.Trim().Split();
                     int bagQty = 0;
                     int.TryParse(bagDetails[0], out bagQty);
-                    newBag.Contents.Add((bagQty, $"{bagDetails[1]} {bagDetails[2]}"));
+
+                    if (bagQty > 0)
+                        newBag.Contents.Add((bagQty, $"{bagDetails[1]} {bagDetails[2]}"));
+
                 }
 
                 returnList.Add(newBag);
