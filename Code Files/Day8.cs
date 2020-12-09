@@ -25,21 +25,42 @@ acc +6";
 
             string inputString = File.ReadAllText($"Input Files/Day8Input.txt");
 
-            int accOutput = Boot(inputString);
-
-            Console.WriteLine($"Accumulator Value {accOutput}");
-        }
-
-        private static int Boot(string programAsString)
-        {
-            int accumulator = 0;
-
             List<string> program = new List<string>();
-
-            foreach (string programLine in programAsString.ReadLines())
+            foreach (string programLine in inputString.ReadLines())
             {
                 program.Add(programLine);
             }
+
+            for (int i = 0; i < program.Count(); i++)
+            {
+                var moddedProgram = new List<string>(program);
+
+                string currentLine = moddedProgram[i];
+
+                switch (currentLine.Substring(0, 3))
+                {
+                    case "nop":
+                        string changedNOPString = currentLine.Replace("nop", "jmp");
+                        moddedProgram.RemoveAt(i);
+                        moddedProgram.Insert(i, changedNOPString);
+                        break;
+                    case "jmp":
+                        string changedJMPString = currentLine.Replace("jmp", "nop");
+                        moddedProgram.RemoveAt(i);
+                        moddedProgram.Insert(i, changedJMPString);
+                        break;
+                    default:
+                        break;
+                }
+
+                int accOutput = Boot(moddedProgram);
+                Console.WriteLine($"Accumulator Value {accOutput}");
+            }
+        }
+
+        private static int Boot(List<string> program)
+        {
+            int accumulator = 0;
 
             int headPosition = 0;
 
@@ -54,6 +75,12 @@ acc +6";
                     Console.WriteLine("Inf Loop");
                     notInf = false;
                     break;
+                }
+
+                if (headPosition == program.Count())
+                {
+                    Console.WriteLine($"Reached End with {accumulator} as the accumulator value");
+
                 }
 
                 sequence.Add(headPosition);
@@ -84,7 +111,7 @@ acc +6";
                     default:
                         break;
                 }
-                Console.WriteLine($"{program[headPosition]} : acc: {accumulator}");
+                // Console.WriteLine($"{program[headPosition]} : acc: {accumulator}");
 
             }
 
