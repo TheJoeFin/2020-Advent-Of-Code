@@ -55,7 +55,7 @@ namespace _2020_Advent_Of_Code
         {
             int wrongNumberReturn = 0;
 
-            bool notFoundInLookBehind = true;
+            bool foundInLookBehind = false;
             for (int i = lookBehindNum; i < listOfNumbers.Count(); i++)
             {
                 int numToCheck = listOfNumbers[i];
@@ -63,18 +63,20 @@ namespace _2020_Advent_Of_Code
                 List<int> checkRange = listOfNumbers.GetRange(i - lookBehindNum, lookBehindNum);
                 for (int j = i - lookBehindNum; j < lookBehindNum; j++)
                 {
-                    int diff = numToCheck - listOfNumbers[j];
+                    int diff = numToCheck - checkRange[j];
 
                     if (checkRange.Contains(diff) == true)
                     {
-                        notFoundInLookBehind = false;
+                        foundInLookBehind = true;
+                        break;
                     }
                 }
 
-                if (notFoundInLookBehind == true)
+                if (foundInLookBehind == false)
                 {
                     wrongNumberReturn = numToCheck;
                 }
+                foundInLookBehind = false;
             }
 
             return wrongNumberReturn;
