@@ -7,11 +7,11 @@ using System.Reflection;
 
 namespace _2020_Advent_Of_Code
 {
-    public static class DayNUM
+    public static class Day10
     {
         public const string TestString = @"";
 
-        private const string dayNumber = "NUM";
+        private const string dayNumber = "10";
 
 
         public static void Run()
