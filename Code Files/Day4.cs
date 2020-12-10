@@ -205,7 +205,7 @@ namespace _2020_Advent_Of_Code
             Console.WriteLine($"There are {numberOfPassportsWithReqiredProps} okay passports");
         }
 
-        private static string testStrings =
+        public const string testStrings =
         @"
 
     4 INVALID PASSPORTS
@@ -240,7 +240,7 @@ namespace _2020_Advent_Of_Code
     ";
 
 
-        private static string OLDinputString =
+        public const string OLDinputString =
         @"
     iyr:2015
     hgt:59cm byr:2029 cid:219 pid:9381688753 eyr:1992 hcl:#b6652a
