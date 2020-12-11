@@ -61,6 +61,35 @@ namespace _2020_Advent_Of_Code
             Console.WriteLine($"Running Day {dayNumber} {DateTime.Now.ToShortTimeString()}");
 
             string inputString = File.ReadAllText($"Input Files/Day{dayNumber}Input.txt");
+
+            List<int> rawList = new List<int>();
+            foreach (string line in inputString.ReadLines())
+            {
+                int.TryParse(line, out int lineInt);
+                rawList.Add(lineInt);
+            }
+            List<int> sortedList = rawList.OrderBy(x => x).ToList();
+
+            int numberOfOnes = 1;
+            int numberOfThrees = 1;
+
+            for (int i = 0; i < sortedList.Count() - 1; i++)
+            {
+                int diff = sortedList[i + 1] - sortedList[i];
+
+                if (diff == 1)
+                    numberOfOnes++;
+
+                if (diff == 3)
+                    numberOfThrees++;
+
+                Console.WriteLine($"Diff line {diff}");
+            }
+
+            Console.WriteLine($"Number of ones {numberOfOnes}");
+            Console.WriteLine($"Number of threes {numberOfThrees}");
+            Console.WriteLine($"Answer 1s*3s {numberOfOnes * numberOfThrees}");
+
         }
     }
 }
