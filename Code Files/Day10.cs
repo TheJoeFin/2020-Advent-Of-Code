@@ -89,47 +89,85 @@ namespace _2020_Advent_Of_Code
 
             List<string> correctStrings = new List<string>();
 
-            for (int i = 0; i < 1024; i++)
+            int loopNumbers
+
+            for (int i = 0; i < 4095; i++)
             {
-                string output = Convert.ToString(i, 2).PadLeft(10, '0');
+                string output = Convert.ToString(i, 2).PadLeft((sortedList.Count() + 1), '0');
 
                 int countingUp = 0;
                 bool inTheList = true;
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < output.Length; j++)
                 {
                     switch (output[j])
                     {
                         case '0':
                             countingUp += 1;
-
-                            if (countingUp == deviceJoltage)
-                                correctStrings.Add(output);
-
-                            if (sortedList.Contains(countingUp) == false)
-                                inTheList = false;
                             break;
                         case '1':
                             countingUp += 3;
 
-                            if (countingUp == deviceJoltage)
-                                correctStrings.Add(output);
-
-                            if (sortedList.Contains(countingUp) == false)
-                                inTheList = false;
                             break;
                         default:
                             break;
                     }
 
-                    if (inTheList == false)
-                        break;
+                    // if (countingUp > 16)
+                    //     Console.WriteLine($"Joltage of: {countingUp} with path: {output}");
+
+                    if (countingUp == deviceJoltage)
+                    {
+                        correctStrings.Add(output);
+                        j = 1000;
+                    }
+
+                    if (countingUp > deviceJoltage)
+                        j = 1000;
+
+                    if (sortedList.Contains(countingUp) == false)
+                    {
+                        inTheList = false;
+                        j = 1000;
+                    }
                 }
             }
 
             Console.WriteLine($"Number of ones {numberOfOnes}");
             Console.WriteLine($"Number of threes {numberOfThrees}");
-            Console.WriteLine($"Answer 1s*3s {correctStrings.Count()}");
 
+            foreach (string binaryString in correctStrings)
+            {
+                Console.WriteLine(convertBinaryStringToIntListString(binaryString, deviceJoltage));
+            }
+
+
+            Console.WriteLine($"Answer, count of correctStrings: {correctStrings.Count()}");
+
+        }
+
+        public static string convertBinaryStringToIntListString(string binaryString, int max)
+        {
+            List<int> convertedList = new List<int> { 0 };
+
+            int lastNumber = 0;
+            int newNumber = 0;
+
+            for (int i = 0; i < binaryString.Length; i++)
+            {
+                if (binaryString[i] == '0')
+                    newNumber = lastNumber += 1;
+                else
+                    newNumber = lastNumber += 3;
+
+                if (newNumber <= max)
+                    convertedList.Add(newNumber);
+                lastNumber = newNumber;
+
+            }
+
+            string returnString = String.Join(',', convertedList.ToArray());
+
+            return returnString;
         }
     }
 }
