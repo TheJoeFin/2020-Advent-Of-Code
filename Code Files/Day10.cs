@@ -63,12 +63,13 @@ namespace _2020_Advent_Of_Code
             string inputString = File.ReadAllText($"Input Files/Day{dayNumber}Input.txt");
 
             List<int> rawList = new List<int>();
-            foreach (string line in inputString.ReadLines())
+            foreach (string line in TestString.ReadLines())
             {
                 int.TryParse(line, out int lineInt);
                 rawList.Add(lineInt);
             }
             List<int> sortedList = rawList.OrderBy(x => x).ToList();
+            int deviceJoltage = sortedList.Last() + 3;
 
             int numberOfOnes = 1;
             int numberOfThrees = 1;
@@ -83,12 +84,51 @@ namespace _2020_Advent_Of_Code
                 if (diff == 3)
                     numberOfThrees++;
 
-                Console.WriteLine($"Diff line {diff}");
+                // Console.WriteLine($"Diff line {diff}");
+            }
+
+            List<string> correctStrings = new List<string>();
+
+            for (int i = 0; i < 1024; i++)
+            {
+                string output = Convert.ToString(i, 2).PadLeft(10, '0');
+
+                int countingUp = 0;
+                bool inTheList = true;
+                for (int j = 0; j < 10; j++)
+                {
+                    switch (output[j])
+                    {
+                        case '0':
+                            countingUp += 1;
+
+                            if (countingUp == deviceJoltage)
+                                correctStrings.Add(output);
+
+                            if (sortedList.Contains(countingUp) == false)
+                                inTheList = false;
+                            break;
+                        case '1':
+                            countingUp += 3;
+
+                            if (countingUp == deviceJoltage)
+                                correctStrings.Add(output);
+
+                            if (sortedList.Contains(countingUp) == false)
+                                inTheList = false;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (inTheList == false)
+                        break;
+                }
             }
 
             Console.WriteLine($"Number of ones {numberOfOnes}");
             Console.WriteLine($"Number of threes {numberOfThrees}");
-            Console.WriteLine($"Answer 1s*3s {numberOfOnes * numberOfThrees}");
+            Console.WriteLine($"Answer 1s*3s {correctStrings.Count()}");
 
         }
     }
