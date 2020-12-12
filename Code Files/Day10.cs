@@ -89,87 +89,46 @@ namespace _2020_Advent_Of_Code
             List<int> sortedList = rawList.OrderBy(x => x).ToList();
             int deviceJoltage = sortedList.Last() + 3;
 
-            int numberOfOnes = 1;
-            int numberOfThrees = 1;
-
-            for (int i = 0; i < sortedList.Count() - 1; i++)
-            {
-                int diff = sortedList[i + 1] - sortedList[i];
-
-                if (diff == 1)
-                    numberOfOnes++;
-
-                if (diff == 3)
-                    numberOfThrees++;
-            }
-
-            List<string> correctStrings = new List<string>();
-
-            // int loopNumbers
-
-            for (int i = 0; i < 4095; i++)
-            {
-                string output = Convert.ToString(i, 2).PadLeft((sortedList.Count() + 1), '0');
-
-                int countingUp = 0;
-                bool inTheList = true;
-                for (int j = 0; j < output.Length; j++)
-                {
-                    switch (output[j])
-                    {
-                        case '0':
-                            countingUp += 1;
-                            break;
-                        case '1':
-                            countingUp += 3;
-
-                            break;
-                        default:
-                            break;
-                    }
-
-                    // if (countingUp > 16)
-                    //     Console.WriteLine($"Joltage of: {countingUp} with path: {output}");
-
-                    if (countingUp == deviceJoltage)
-                    {
-                        correctStrings.Add(output);
-                        j = 1000;
-                    }
-
-                    if (countingUp > deviceJoltage)
-                        j = 1000;
-
-                    if (sortedList.Contains(countingUp) == false)
-                    {
-                        inTheList = false;
-                        j = 1000;
-                    }
-                }
-            }
-
-            // Console.WriteLine($"Number of ones {numberOfOnes}");
-            // Console.WriteLine($"Number of threes {numberOfThrees}");
-
-            // foreach (string binaryString in correctStrings)
-            // {
-            //     Console.WriteLine(convertBinaryStringToIntListString(binaryString, deviceJoltage));
-            // }
+            // Begin solving the problem
 
             Console.WriteLine("beginning to sort into adaptors");
             List<Adaptor> adaptors = ConvertIntsToAdaptors(sortedList);
-            Console.WriteLine("sorted into adaptors");
+            Console.WriteLine("organize into adaptors");
 
             Console.WriteLine("beginning to check chains");
-            List<string> answers = ConvertAdaptorsTo(adaptors, deviceJoltage);
+            ulong answers = CountBranches(0, sortedList, new Dictionary<int, ulong>());
 
-            Console.WriteLine($"Answer, count of correctStrings: {answers.Count()}");
+            Console.WriteLine($"Answer: {answers.ToString()}");
+            // answer for test 2: 19208
 
         }
 
-        private static List<string> ConvertAdaptorsTo(List<Adaptor> adaptors, int deviceJoltage)
+        private static ulong CountBranches(int Position, List<int> IntListSorted, Dictionary<int, ulong> cache)
         {
-            List<string> returnList = new List<string>();
+            if (cache.ContainsKey(Position))
+                return cache[Position];
+
+            int largestIndex = IntListSorted.Count() - 1;
+
+            if (Position == largestIndex)
+                return 1;
+
+            ulong totalBranches = 0;
+
+            for (int i = 1; i < 4; i++)
+            {
+                if ((Position + i) <= largestIndex && (IntListSorted[Position + i] - IntListSorted[Position]) <= 3)
+                    totalBranches += CountBranches(Position + i, IntListSorted, cache);
+            }
+
+            cache.Add(Position, totalBranches);
+
+            return totalBranches;
+        }
+
+        private static int ConvertAdaptorsTo(List<Adaptor> adaptors, int deviceJoltage)
+        {
+            int total = 0;
 
             Adaptor firstAdaptor = adaptors.FirstOrDefault();
 
@@ -178,28 +137,25 @@ namespace _2020_Advent_Of_Code
                 List<Adaptor> chainSoFar = new List<Adaptor>();
                 chainSoFar.Add(firstAdaptor);
 
+                Dictionary<int, int> cache = new Dictionary<int, int>();
+
                 foreach (int adaptor in firstAdaptor.CompatibleAdaptors)
                 {
                     List<Adaptor> chainCopy = new List<Adaptor>(chainSoFar);
 
-                    ContinueTheChain(adaptor, chainCopy, adaptors, returnList, deviceJoltage);
+                    total += ContinueTheChain(adaptor, chainCopy, adaptors, total, deviceJoltage, cache);
                 }
             }
 
-            return returnList;
+            return total;
         }
 
-        private static void ContinueTheChain(int adaptorJoltage, List<Adaptor> chainCopy, List<Adaptor> adaptors, List<string> returnList, int max)
+        private static int ContinueTheChain(int adaptorJoltage, List<Adaptor> chainCopy, List<Adaptor> adaptors, int total, int max, Dictionary<int, int> cache)
         {
             Adaptor adaptor = adaptors.Where(a => a.Joltage == adaptorJoltage).FirstOrDefault();
             chainCopy.Add(adaptor);
 
-            if (adaptorJoltage + 3 >= max)
-            {
-                returnList.Add(string.Join(',', chainCopy));
-                chainCopy.Clear();
-                return;
-            }
+
 
             if (adaptor != null)
             {
@@ -207,9 +163,29 @@ namespace _2020_Advent_Of_Code
                 {
                     List<Adaptor> newCopy = new List<Adaptor>(chainCopy);
 
-                    ContinueTheChain(compatJoltage, newCopy, adaptors, returnList, max);
+                    if (cache.ContainsKey(compatJoltage))
+                    {
+                        Console.WriteLine($"Found {compatJoltage} in the cache for {cache[compatJoltage]}");
+                        total += cache[compatJoltage] + 1;
+                        cache.Add(adaptorJoltage, total);
+                        return total;
+                    }
+                    if (compatJoltage + 3 >= max)
+                    {
+                        Console.WriteLine($"Found the end  with {adaptorJoltage}");
+                        cache.Add(compatJoltage, 1);
+                        return 1;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Continuing the chain for {compatJoltage}");
+                        total += ContinueTheChain(compatJoltage, newCopy, adaptors, total, max, cache);
+                    }
+
                 }
             }
+
+            return total;
         }
 
         private static List<Adaptor> ConvertIntsToAdaptors(List<int> sortedList)
