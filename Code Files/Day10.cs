@@ -17,21 +17,26 @@ namespace _2020_Advent_Of_Code
         }
 
         public List<int> CompatibleAdaptors = new List<int>();
+
+        public override string ToString()
+        {
+            return Joltage.ToString();
+        }
     }
 
     public static class Day10
     {
-        public const string TestString = @"16
-10
-15
+        public const string TestString = @"1
+4
 5
-1
-11
-7
-19
 6
+7
+10
+11
 12
-4";
+15
+16
+19";
 
         public const string TestString2 = @"28
 33
@@ -62,6 +67,7 @@ namespace _2020_Advent_Of_Code
 4
 2
 34
+0
 10
 3";
 
@@ -75,7 +81,7 @@ namespace _2020_Advent_Of_Code
             string inputString = File.ReadAllText($"Input Files/Day{dayNumber}Input.txt");
 
             List<int> rawList = new List<int>();
-            foreach (string line in TestString.ReadLines())
+            foreach (string line in inputString.ReadLines())
             {
                 int.TryParse(line, out int lineInt);
                 rawList.Add(lineInt);
@@ -150,25 +156,60 @@ namespace _2020_Advent_Of_Code
             //     Console.WriteLine(convertBinaryStringToIntListString(binaryString, deviceJoltage));
             // }
 
+            Console.WriteLine("beginning to sort into adaptors");
             List<Adaptor> adaptors = ConvertIntsToAdaptors(sortedList);
+            Console.WriteLine("sorted into adaptors");
 
-            List<List<int>> answers = ConvertAdaptorsTo(adaptors, deviceJoltage);
+            Console.WriteLine("beginning to check chains");
+            List<string> answers = ConvertAdaptorsTo(adaptors, deviceJoltage);
 
-
-            Console.WriteLine($"Answer, count of correctStrings: {correctStrings.Count()}");
+            Console.WriteLine($"Answer, count of correctStrings: {answers.Count()}");
 
         }
 
-        private static List<List<int>> ConvertAdaptorsTo(List<Adaptor> adaptors, int deviceJoltage)
+        private static List<string> ConvertAdaptorsTo(List<Adaptor> adaptors, int deviceJoltage)
         {
-            List<List<int>> returnList = new List<List<int>>();
+            List<string> returnList = new List<string>();
 
-            foreach (Adaptor adaptor in adaptors)
+            Adaptor firstAdaptor = adaptors.FirstOrDefault();
+
+            if (firstAdaptor != null)
             {
+                List<Adaptor> chainSoFar = new List<Adaptor>();
+                chainSoFar.Add(firstAdaptor);
 
+                foreach (int adaptor in firstAdaptor.CompatibleAdaptors)
+                {
+                    List<Adaptor> chainCopy = new List<Adaptor>(chainSoFar);
+
+                    ContinueTheChain(adaptor, chainCopy, adaptors, returnList, deviceJoltage);
+                }
             }
 
             return returnList;
+        }
+
+        private static void ContinueTheChain(int adaptorJoltage, List<Adaptor> chainCopy, List<Adaptor> adaptors, List<string> returnList, int max)
+        {
+            Adaptor adaptor = adaptors.Where(a => a.Joltage == adaptorJoltage).FirstOrDefault();
+            chainCopy.Add(adaptor);
+
+            if (adaptorJoltage + 3 >= max)
+            {
+                returnList.Add(string.Join(',', chainCopy));
+                chainCopy.Clear();
+                return;
+            }
+
+            if (adaptor != null)
+            {
+                foreach (int compatJoltage in adaptor.CompatibleAdaptors)
+                {
+                    List<Adaptor> newCopy = new List<Adaptor>(chainCopy);
+
+                    ContinueTheChain(compatJoltage, newCopy, adaptors, returnList, max);
+                }
+            }
         }
 
         private static List<Adaptor> ConvertIntsToAdaptors(List<int> sortedList)
@@ -192,15 +233,6 @@ namespace _2020_Advent_Of_Code
             }
 
             return returnAdaptors;
-        }
-
-        private static List<List<int>> PlugInAllOfTheseAdaptors(List<int> sortedList)
-        {
-            List<List<int>> allArrangments = new List<List<int>>();
-
-            List<int>
-
-            return allArrangments;
         }
 
         public static string convertBinaryStringToIntListString(string binaryString, int max)
