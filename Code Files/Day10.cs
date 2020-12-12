@@ -7,6 +7,18 @@ using System.Reflection;
 
 namespace _2020_Advent_Of_Code
 {
+    public class Adaptor
+    {
+        public int Joltage { get; set; }
+
+        public Adaptor(int seedInt)
+        {
+            Joltage = seedInt;
+        }
+
+        public List<int> CompatibleAdaptors = new List<int>();
+    }
+
     public static class Day10
     {
         public const string TestString = @"16
@@ -83,13 +95,11 @@ namespace _2020_Advent_Of_Code
 
                 if (diff == 3)
                     numberOfThrees++;
-
-                // Console.WriteLine($"Diff line {diff}");
             }
 
             List<string> correctStrings = new List<string>();
 
-            int loopNumbers
+            // int loopNumbers
 
             for (int i = 0; i < 4095; i++)
             {
@@ -132,17 +142,65 @@ namespace _2020_Advent_Of_Code
                 }
             }
 
-            Console.WriteLine($"Number of ones {numberOfOnes}");
-            Console.WriteLine($"Number of threes {numberOfThrees}");
+            // Console.WriteLine($"Number of ones {numberOfOnes}");
+            // Console.WriteLine($"Number of threes {numberOfThrees}");
 
-            foreach (string binaryString in correctStrings)
-            {
-                Console.WriteLine(convertBinaryStringToIntListString(binaryString, deviceJoltage));
-            }
+            // foreach (string binaryString in correctStrings)
+            // {
+            //     Console.WriteLine(convertBinaryStringToIntListString(binaryString, deviceJoltage));
+            // }
+
+            List<Adaptor> adaptors = ConvertIntsToAdaptors(sortedList);
+
+            List<List<int>> answers = ConvertAdaptorsTo(adaptors, deviceJoltage);
 
 
             Console.WriteLine($"Answer, count of correctStrings: {correctStrings.Count()}");
 
+        }
+
+        private static List<List<int>> ConvertAdaptorsTo(List<Adaptor> adaptors, int deviceJoltage)
+        {
+            List<List<int>> returnList = new List<List<int>>();
+
+            foreach (Adaptor adaptor in adaptors)
+            {
+
+            }
+
+            return returnList;
+        }
+
+        private static List<Adaptor> ConvertIntsToAdaptors(List<int> sortedList)
+        {
+            List<Adaptor> returnAdaptors = new List<Adaptor>();
+
+            foreach (int intList in sortedList)
+            {
+                Adaptor adaptor = new Adaptor(intList);
+
+                for (int i = 1; i < 4; i++)
+                {
+                    int possibleAdaptors = adaptor.Joltage + i;
+
+                    if (sortedList.Contains(possibleAdaptors))
+                        adaptor.CompatibleAdaptors.Add(possibleAdaptors);
+
+                }
+
+                returnAdaptors.Add(adaptor);
+            }
+
+            return returnAdaptors;
+        }
+
+        private static List<List<int>> PlugInAllOfTheseAdaptors(List<int> sortedList)
+        {
+            List<List<int>> allArrangments = new List<List<int>>();
+
+            List<int>
+
+            return allArrangments;
         }
 
         public static string convertBinaryStringToIntListString(string binaryString, int max)
