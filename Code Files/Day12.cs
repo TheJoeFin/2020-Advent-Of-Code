@@ -12,6 +12,14 @@ namespace _2020_Advent_Of_Code
     {
         public Point Position { get; set; } = new Point(0, 0);
 
+        public int ManhattanDirection
+        {
+            get
+            {
+                return Math.Abs(Position.X) + Math.Abs(Position.Y);
+            }
+        }
+
         public string Heading { get; set; } = "E";
 
         public void Act(string order)
@@ -57,7 +65,28 @@ namespace _2020_Advent_Of_Code
 
         private void Move(string direction, int magnitude)
         {
+            string translatedDirection = "";
 
+            if (direction == "F")
+                translatedDirection = Heading;
+
+            switch (translatedDirection)
+            {
+                case "N":
+                    Position = new Point(Position.X, Position.Y + magnitude);
+                    break;
+                case "E":
+                    Position = new Point(Position.X + magnitude, Position.Y);
+                    break;
+                case "S":
+                    Position = new Point(Position.X, Position.Y - magnitude);
+                    break;
+                case "W":
+                    Position = new Point(Position.X - magnitude, Position.Y);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -90,6 +119,14 @@ F11";
             // test string Manhattan distance = 25
 
             Ship myShip = new Ship();
+
+            foreach (string line in TestString.ReadLines())
+            {
+                myShip.Act(line);
+            }
+
+            Console.WriteLine($"Manhattan Direction is {myShip.ManhattanDirection}");
+
         }
     }
 }
