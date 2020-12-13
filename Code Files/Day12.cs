@@ -22,7 +22,7 @@ namespace _2020_Advent_Of_Code
 
         public string Heading { get; set; } = "E";
 
-        public void Act(string order)
+        public void Act(string order, bool Verbose = false)
         {
             string Action = order.Substring(0, 1);
             int magnitude = int.Parse(order.Substring(1, order.Length - 1));
@@ -122,7 +122,7 @@ F11";
 
             foreach (string line in TestString.ReadLines())
             {
-                myShip.Act(line);
+                myShip.Act(line, true);
             }
 
             Console.WriteLine($"Manhattan Direction is {myShip.ManhattanDirection}");
