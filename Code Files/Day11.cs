@@ -46,7 +46,7 @@ L.LLLLL.LL";
             //  count occupied neighbors
             //  change state based on neighbors
 
-            char[,] AllSeats = ConvertStringsToArray(TestString);
+            char[,] AllSeats = ConvertStringsToArray(inputString);
 
             int steadyState = CycleSeating(AllSeats);
             Console.WriteLine($"Steady state number of people {steadyState}");
@@ -57,19 +57,71 @@ L.LLLLL.LL";
             int numberOfOccupiedSeats = CountOccupiedSeats(allSeats);
             int newCycleCountOccupiedSeats = 0;
 
-            while (numberOfOccupiedSeats != newCycleCountOccupiedSeats)
+            do
             {
                 char[,] nextStep = TakeNextStep(allSeats);
-
                 newCycleCountOccupiedSeats = CountOccupiedSeats(nextStep);
+                numberOfOccupiedSeats = CountOccupiedSeats(allSeats);
+                allSeats = (char[,])nextStep.Clone();
             }
+            while (numberOfOccupiedSeats != newCycleCountOccupiedSeats);
 
             return numberOfOccupiedSeats;
         }
 
         private static char[,] TakeNextStep(char[,] allSeats)
         {
-            throw new NotImplementedException();
+            char[,] returnArray = (char[,])allSeats.Clone();
+
+            int maxWidth = allSeats.GetLength(0);
+            int maxHeight = allSeats.GetLength(1);
+
+            for (int i = 0; i < maxHeight; i++)
+            {
+                for (int j = 0; j < maxWidth; j++)
+                {
+                    char seat = allSeats[j, i];
+
+                    if (seat == 'L' || seat == '#')
+                    {
+                        int occupidedNeighbors = 0;
+                        // 8 neighbors
+                        // 1) i + 1 | j - 1
+                        if ((i + 1) < maxHeight && (j - 1) >= 0 && allSeats[j - 1, i + 1] == '#')
+                            occupidedNeighbors++;
+                        // 2) i + 0 | j - 1
+                        if ((i + 0) < maxHeight && (j - 1) >= 0 && allSeats[j - 1, i + 0] == '#')
+                            occupidedNeighbors++;
+                        // 3) i - 1 | j - 1
+                        if ((i - 1) >= 0 && (j - 1) >= 0 && allSeats[j - 1, i - 1] == '#')
+                            occupidedNeighbors++;
+                        // 4) i - 1 | j + 0
+                        if ((i - 1) >= 0 && (j - 0) >= 0 && allSeats[j + 0, i - 1] == '#')
+                            occupidedNeighbors++;
+                        // 5) i - 1 | j + 1
+                        if ((i - 1) >= 0 && (j + 1) < maxWidth && allSeats[j + 1, i - 1] == '#')
+                            occupidedNeighbors++;
+                        // 6) i - 0 | j + 1
+                        if ((i - 0) >= 0 && (j + 1) < maxWidth && allSeats[j + 1, i - 0] == '#')
+                            occupidedNeighbors++;
+                        // 7) i + 1 | j + 1
+                        if ((i + 1) < maxHeight && (j + 1) < maxWidth && allSeats[j + 1, i + 1] == '#')
+                            occupidedNeighbors++;
+                        // 8) i + 1 | j + 0
+                        if ((i + 1) < maxHeight && (j - 0) >= 0 && allSeats[j + 0, i + 1] == '#')
+                            occupidedNeighbors++;
+
+                        if (occupidedNeighbors >= 4 && seat == '#')
+                            returnArray[j, i] = 'L';
+
+                        if (occupidedNeighbors == 0 && seat == 'L')
+                            returnArray[j, i] = '#';
+
+                    }
+                }
+            }
+
+            return returnArray;
         }
 
         private static int CountOccupiedSeats(char[,] allSeats)
