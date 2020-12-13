@@ -48,15 +48,53 @@ L.LLLLL.LL";
 
             char[,] AllSeats = ConvertStringsToArray(TestString);
 
+            int steadyState = CycleSeating(AllSeats);
+            Console.WriteLine($"Steady state number of people {steadyState}");
         }
 
-        private static char[,] ConvertStringsToArray(string testString)
+        private static int CycleSeating(char[,] allSeats)
+        {
+            int numberOfOccupiedSeats = CountOccupiedSeats(allSeats);
+            int newCycleCountOccupiedSeats = 0;
+
+            while (numberOfOccupiedSeats != newCycleCountOccupiedSeats)
+            {
+                char[,] nextStep = TakeNextStep(allSeats);
+
+                newCycleCountOccupiedSeats = CountOccupiedSeats(nextStep);
+            }
+
+            return numberOfOccupiedSeats;
+        }
+
+        private static char[,] TakeNextStep(char[,] allSeats)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static int CountOccupiedSeats(char[,] allSeats)
+        {
+            int occupiedSeats = 0;
+
+            for (int i = 0; i < allSeats.GetLength(1); i++)
+            {
+                for (int j = 0; j < allSeats.GetLength(0); j++)
+                {
+                    if (allSeats[j, i] == '#')
+                        occupiedSeats++;
+                }
+            }
+
+            return occupiedSeats;
+        }
+
+        private static char[,] ConvertStringsToArray(string passedString)
         {
 
             int width = 0;
             int height = 0;
 
-            foreach (string line in testString.ReadLines())
+            foreach (string line in passedString.ReadLines())
             {
                 width = line.Length;
                 height++;
@@ -64,7 +102,19 @@ L.LLLLL.LL";
 
             char[,] returnArray = new char[width, height];
 
+            int i = 0;
+            int j = 0;
 
+            foreach (string line in passedString.ReadLines())
+            {
+                foreach (char character in line)
+                {
+                    returnArray[i, j] = character;
+                    i++;
+                }
+                i = 0;
+                j++;
+            }
 
             return returnArray;
         }
