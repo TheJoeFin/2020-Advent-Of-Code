@@ -46,7 +46,7 @@ L.LLLLL.LL";
             //  count occupied neighbors
             //  change state based on neighbors
 
-            char[,] AllSeats = ConvertStringsToArray(TestString);
+            char[,] AllSeats = ConvertStringsToArray(inputString);
 
             int steadyState = CycleSeating(AllSeats);
             Console.WriteLine($"Steady state number of people {steadyState}");
@@ -60,6 +60,7 @@ L.LLLLL.LL";
             do
             {
                 char[,] nextStep = TakeNextStep(allSeats);
+                // printSeats(nextStep);
                 newCycleCountOccupiedSeats = CountOccupiedSeats(nextStep);
                 numberOfOccupiedSeats = CountOccupiedSeats(allSeats);
                 allSeats = (char[,])nextStep.Clone();
@@ -67,6 +68,21 @@ L.LLLLL.LL";
             while (numberOfOccupiedSeats != newCycleCountOccupiedSeats);
 
             return numberOfOccupiedSeats;
+        }
+
+        private static void printSeats(char[,] nextStep)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            for (int i = 0; i < nextStep.GetLength(0); i++)
+            {
+                Console.WriteLine("");
+                for (int j = 0; j < nextStep.GetLength(1); j++)
+                {
+                    Console.Write(nextStep[j, i]);
+                }
+            }
         }
 
         private static char[,] TakeNextStep(char[,] allSeats)
@@ -86,7 +102,7 @@ L.LLLLL.LL";
                     {
                         int occupidedNeighbors = 0;
                         // 8 neighbors
-                        // 1) i + 1 | j - 1
+                        // 1) i + 1 | j - 1 (SW)
                         int lookingDistance = 1;
 
                         while ((i + lookingDistance) < maxHeight && (j - lookingDistance) >= 0)
@@ -96,10 +112,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j - lookingDistance, i + lookingDistance] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 2) i + 0 | j - 1
+                        // 2) i + 0 | j - 1 (W)
                         while ((i + 0) < maxHeight && (j - lookingDistance) >= 0)
                         {
                             if (allSeats[j - lookingDistance, i + 0] == '#')
@@ -107,10 +125,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j - lookingDistance, i + 0] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 3) i - 1 | j - 1
+                        // 3) i - 1 | j - 1 (NW)
                         while ((i - lookingDistance) >= 0 && (j - lookingDistance) >= 0)
                         {
                             if (allSeats[j - lookingDistance, i - lookingDistance] == '#')
@@ -118,10 +138,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j - lookingDistance, i - lookingDistance] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 4) i - 1 | j + 0
+                        // 4) i - 1 | j + 0 (N)
                         while ((i - lookingDistance) >= 0 && (j - 0) >= 0)
                         {
                             if (allSeats[j + 0, i - lookingDistance] == '#')
@@ -129,10 +151,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j + 0, i - lookingDistance] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 5) i - 1 | j + 1
+                        // 5) i - 1 | j + 1 (NE)
                         while ((i - lookingDistance) >= 0 && (j + lookingDistance) < maxWidth)
                         {
                             if (allSeats[j + lookingDistance, i - lookingDistance] == '#')
@@ -140,10 +164,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j + lookingDistance, i - lookingDistance] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 6) i - 0 | j + 1
+                        // 6) i - 0 | j + 1 (E)
                         while ((i - 0) >= 0 && (j + lookingDistance) < maxWidth)
                         {
                             if (allSeats[j + lookingDistance, i - 0] == '#')
@@ -151,10 +177,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j + lookingDistance, i - 0] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 7) i + 1 | j + 1
+                        // 7) i + 1 | j + 1 (SE)
                         while ((i + lookingDistance) < maxHeight && (j + lookingDistance) < maxWidth)
                         {
                             if (allSeats[j + lookingDistance, i + lookingDistance] == '#')
@@ -162,10 +190,12 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j + lookingDistance, i + lookingDistance] == 'L')
+                                break;
                             lookingDistance++;
                         }
                         lookingDistance = 1;
-                        // 8) i + 1 | j + 0
+                        // 8) i + 1 | j + 0 (S)
                         while ((i + lookingDistance) < maxHeight && (j - 0) >= 0)
                         {
                             if (allSeats[j + 0, i + lookingDistance] == '#')
@@ -173,6 +203,8 @@ L.LLLLL.LL";
                                 occupidedNeighbors++;
                                 break;
                             }
+                            if (allSeats[j + 0, i + lookingDistance] == 'L')
+                                break;
                             lookingDistance++;
                         }
 
