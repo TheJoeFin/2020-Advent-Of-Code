@@ -28,13 +28,13 @@ namespace _2020_Advent_Of_Code
             int magnitude = int.Parse(order.Substring(1, order.Length - 1));
 
             if (Action == "R" || Action == "L")
-                Turn(Action, magnitude);
+                Turn(Action, magnitude, Verbose);
             else
-                Move(Action, magnitude);
+                Move(Action, magnitude, Verbose);
         }
 
         private List<string> ordinalDirections = new List<string> { "N", "E", "S", "W" };
-        private void Turn(string direction, int degrees)
+        private void Turn(string direction, int degrees, bool verbose = false)
         {
             int turnTimes = degrees / 90;
 
@@ -44,31 +44,33 @@ namespace _2020_Advent_Of_Code
             {
                 for (int r = 1; r <= turnTimes; r++)
                 {
-                    int newIndex = startingPosition + r;
-                    if (newIndex > 3)
-                        newIndex = 0;
-                    Heading = ordinalDirections[newIndex];
+                    startingPosition++;
+                    if (startingPosition > 3)
+                        startingPosition = 0;
                 }
+                Heading = ordinalDirections[startingPosition];
             }
 
             if (direction == "L")
             {
                 for (int l = 1; l <= turnTimes; l++)
                 {
-                    int newIndex = startingPosition - l;
-                    if (newIndex < 0)
-                        newIndex = 3;
-                    Heading = ordinalDirections[newIndex];
+                    startingPosition--;
+                    if (startingPosition < 0)
+                        startingPosition = 3;
                 }
+                Heading = ordinalDirections[startingPosition];
             }
         }
 
-        private void Move(string direction, int magnitude)
+        private void Move(string direction, int magnitude, bool Verbose = false)
         {
             string translatedDirection = "";
 
             if (direction == "F")
                 translatedDirection = Heading;
+            else
+                translatedDirection = direction;
 
             switch (translatedDirection)
             {
@@ -120,13 +122,13 @@ F11";
 
             Ship myShip = new Ship();
 
-            foreach (string line in TestString.ReadLines())
+            foreach (string line in inputString.ReadLines())
             {
                 myShip.Act(line, true);
             }
 
             Console.WriteLine($"Manhattan Direction is {myShip.ManhattanDirection}");
-
+            // 2795 is false
         }
     }
 }
