@@ -46,22 +46,16 @@ namespace _2020_Advent_Of_Code
             {
                 for (int r = 1; r <= turnTimes; r++)
                 {
-                    startingPosition++;
-                    if (startingPosition > 3)
-                        startingPosition = 0;
+                    Waypoint = new Point(Waypoint.Y, -Waypoint.X);
                 }
-                Heading = ordinalDirections[startingPosition];
             }
 
             if (direction == "L")
             {
                 for (int l = 1; l <= turnTimes; l++)
                 {
-                    startingPosition--;
-                    if (startingPosition < 0)
-                        startingPosition = 3;
+                    Waypoint = new Point(-Waypoint.Y, Waypoint.X);
                 }
-                Heading = ordinalDirections[startingPosition];
             }
         }
 
@@ -70,27 +64,36 @@ namespace _2020_Advent_Of_Code
             string translatedDirection = "";
 
             if (direction == "F")
-                translatedDirection = Heading;
+                MoveShip();
             else
-                translatedDirection = direction;
+                MoveWaypoint(string direction, int magnitude);
 
-            switch (translatedDirection)
+        }
+
+        private void MoveWaypoint(string direction, int magnitude)
+        {
+            switch (direction)
             {
                 case "N":
-                    Position = new Point(Position.X, Position.Y + magnitude);
+                    Waypoint = new Point(Waypoint.X, Waypoint.Y + magnitude);
                     break;
                 case "E":
-                    Position = new Point(Position.X + magnitude, Position.Y);
+                    Waypoint = new Point(Waypoint.X + magnitude, Waypoint.Y);
                     break;
                 case "S":
-                    Position = new Point(Position.X, Position.Y - magnitude);
+                    Waypoint = new Point(Waypoint.X, Waypoint.Y - magnitude);
                     break;
                 case "W":
-                    Position = new Point(Position.X - magnitude, Position.Y);
+                    Waypoint = new Point(Waypoint.X - magnitude, Waypoint.Y);
                     break;
                 default:
                     break;
             }
+        }
+
+        private void MoveShip()
+        {
+            Position = new Point(Position.X + Waypoint.X, Position.Y + Waypoint.Y);
         }
     }
 
@@ -124,7 +127,7 @@ F11";
 
             Ship myShip = new Ship();
 
-            foreach (string line in inputString.ReadLines())
+            foreach (string line in TestString.ReadLines())
             {
                 myShip.Act(line, true);
             }
