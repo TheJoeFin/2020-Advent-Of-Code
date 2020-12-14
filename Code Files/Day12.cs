@@ -20,6 +20,8 @@ namespace _2020_Advent_Of_Code
             }
         }
 
+        public Point Waypoint { get; set; } = new Point(10, 1);
+
         public string Heading { get; set; } = "E";
 
         public void Act(string order, bool Verbose = false)
