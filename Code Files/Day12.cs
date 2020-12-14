@@ -61,13 +61,10 @@ namespace _2020_Advent_Of_Code
 
         private void Move(string direction, int magnitude, bool Verbose = false)
         {
-            string translatedDirection = "";
-
             if (direction == "F")
-                MoveShip();
+                MoveShip(magnitude);
             else
-                MoveWaypoint(string direction, int magnitude);
-
+                MoveWaypoint(direction, magnitude);
         }
 
         private void MoveWaypoint(string direction, int magnitude)
@@ -91,9 +88,12 @@ namespace _2020_Advent_Of_Code
             }
         }
 
-        private void MoveShip()
+        private void MoveShip(int magnitude)
         {
-            Position = new Point(Position.X + Waypoint.X, Position.Y + Waypoint.Y);
+            for (int i = 0; i < magnitude; i++)
+            {
+                Position = new Point(Position.X + Waypoint.X, Position.Y + Waypoint.Y);
+            }
         }
     }
 
@@ -127,7 +127,7 @@ F11";
 
             Ship myShip = new Ship();
 
-            foreach (string line in TestString.ReadLines())
+            foreach (string line in inputString.ReadLines())
             {
                 myShip.Act(line, true);
             }
