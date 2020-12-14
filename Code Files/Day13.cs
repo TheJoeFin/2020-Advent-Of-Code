@@ -64,7 +64,7 @@ namespace _2020_Advent_Of_Code
             {
                 continuousChain = true;
 
-                if (foundSteps.Count() > 0)
+                if (foundSteps.Count() > 1)
                     startTimeOfContinuousChain += LCM(foundSteps);
                 else
                     startTimeOfContinuousChain += firstbusID;
@@ -84,6 +84,7 @@ namespace _2020_Advent_Of_Code
                     else
                     {
                         foundSteps.Append(startTimeOfContinuousChain);
+                        Console.WriteLine($"Added {startTimeOfContinuousChain}");
                     }
                 }
             }
