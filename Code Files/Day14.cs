@@ -22,22 +22,54 @@ namespace _2020_Advent_Of_Code
 
             // Docking Data
 
-            ulong[] memory = new ulong[2 ^ 35];
+            Dictionary<ulong, ulong> initMemory = initalizationProgram(inputString);
+            // ulong sum = sumAllMemory(initMemory);
 
-            ulong[] initMemory = initalizationProgram(memory);
-            ulong sum = sumAllMemory(initMemory);
 
 
         }
 
-        private static ulong sumAllMemory(ulong[] initMemory)
+        private static ulong sumAllMemory(Dictionary<ulong, ulong> initMemory)
         {
-            throw new NotImplementedException();
+            ulong runningSum = 0;
+
+            foreach (ulong itemInMemory in initMemory.Values)
+            {
+                runningSum += itemInMemory;
+            }
+
+            return runningSum;
         }
 
-        private static ulong[] initalizationProgram(ulong[] memory)
+        private static Dictionary<ulong, ulong> initalizationProgram(string bootProgram)
         {
-            throw new NotImplementedException();
+            Dictionary<ulong, ulong> initedmemory = new Dictionary<ulong, ulong>();
+
+            string mask = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+            foreach (string rawLine in bootProgram.ReadLines())
+            {
+                if (rawLine.StartsWith("mask = "))
+                {
+                    mask = rawLine.Substring(7, 36);
+                }
+                else
+                {
+                    int indexOfEqualSign = rawLine.IndexOf('=');
+                    // int indexOfFirstBracket = rawLine.IndexOf('[');
+                    int indexOfLastBracket = rawLine.IndexOf(']');
+
+                    ulong memoryLocation = ulong.Parse(rawLine.Substring(4, indexOfLastBracket - 4));
+
+                    string stringNum = rawLine.Substring(indexOfEqualSign + 2, rawLine.Length - (indexOfEqualSign + 2));
+                    ulong lineNumber = ulong.Parse(stringNum);
+
+                    ulong maskedNumber = maskNumber(lineNumber, mask);
+
+                    initedmemory.Add(memoryLocation, maskedNumber);
+                }
+            }
+
+            return initedmemory;
         }
     }
 }
