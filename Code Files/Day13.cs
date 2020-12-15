@@ -37,7 +37,7 @@ namespace _2020_Advent_Of_Code
             string inputString = File.ReadAllText($"Input Files/Day{dayNumber}Input.txt");
 
             // Day 13: Shuttle Search
-            var inputArray = TestString6.Split('\n');
+            var inputArray = inputString.Split('\n');
 
             int earliestTimeStampToDepart = int.Parse(inputArray[0]);
             string busDepartaures = inputArray[1];
@@ -51,12 +51,20 @@ namespace _2020_Advent_Of_Code
 
         private static ulong findCompactBusChain(string busDepartaures)
         {
+            // step at the first bus id to find the first match
+            // then when you find the second match
+            // multiply the first id and the second id to get your new step size
+            // check for a match for the next row
+            // when fail looking for a match on that row
+            // step by the product of all matches plus the current position until the next step is found
+
+
             List<string> listOfDepartaures = busDepartaures.Split(',').ToList();
 
-            ulong firstbusID = ulong.Parse(listOfDepartaures.First());
+            ulong stepSize = ulong.Parse(listOfDepartaures.First());
 
-            ulong[] foundSteps = new ulong[listOfDepartaures.Count()];
-            foundSteps.Append(firstbusID);
+            List<ulong> stepCollection = new List<ulong>();
+            stepCollection.Add(stepSize);
 
             ulong startTimeOfContinuousChain = 0;
             bool continuousChain = false;
@@ -64,10 +72,7 @@ namespace _2020_Advent_Of_Code
             {
                 continuousChain = true;
 
-                if (foundSteps.Count() > 1)
-                    startTimeOfContinuousChain += LCM(foundSteps);
-                else
-                    startTimeOfContinuousChain += firstbusID;
+                startTimeOfContinuousChain += stepSize;
 
                 for (int i = 0; i < listOfDepartaures.Count(); i++)
                 {
@@ -83,27 +88,18 @@ namespace _2020_Advent_Of_Code
                     }
                     else
                     {
-                        foundSteps.Append(startTimeOfContinuousChain);
-                        Console.WriteLine($"Added {startTimeOfContinuousChain}");
+                        if (stepCollection.Contains(busID) == false)
+                        {
+                            stepCollection.Add(busID);
+                            stepSize *= busID;
+                            Console.WriteLine($"Added {busID} to {stepSize}");
+                        }
                     }
                 }
             }
             while (continuousChain == false);
 
             return startTimeOfContinuousChain;
-        }
-
-        static ulong LCM(ulong[] numbers)
-        {
-            return numbers.Aggregate(lcm);
-        }
-        static ulong lcm(ulong a, ulong b)
-        {
-            return (ulong)(Math.Abs((decimal)(a * b)) / GCD(a, b));
-        }
-        static ulong GCD(ulong a, ulong b)
-        {
-            return b == 0 ? a : GCD(b, a % b);
         }
 
         private static int FindAnswer(int earliestTimeStampToDepart, string busDepartaures)
