@@ -32,65 +32,54 @@ namespace _2020_Advent_Of_Code
 
             List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
 
+            Dictionary<long, long> seenLast = new Dictionary<long, long>();
+
             foreach (string rawLine in memoryGameSequenceRaw)
             {
                 memoryGameSequence.Add(long.Parse(rawLine));
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (30000000 - 1); i++)
+            for (int i = memoryGameSequence.Count() - 1; i <= (10 - 1); i++) // 30000000
             {
                 long previousStep = memoryGameSequence[i];
 
-                int? previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence, previousStep);
-                // previousIndexOfPreviousStep;
+                int? previousIndexOfPreviousStep = null;
 
-                // Console.WriteLine($"{i} | {string.Join(',', memoryGameSequence)}");
+                if (seenLast.ContainsKey(previousStep))
+                {
+                    previousIndexOfPreviousStep = (int?)seenLast[previousStep];
+                    Console.WriteLine($"{i} | seenLast contains {previousStep} at {previousIndexOfPreviousStep}");
+                }
+                else
+                    previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence, previousStep);
+
+                Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
 
                 if (previousIndexOfPreviousStep != null)
                 {
                     long numToAdd = i - (long)previousIndexOfPreviousStep;
 
-                    if (numToAdd == 0)
-                        memoryGameSequence.Add(1);
+                    Console.WriteLine($"{i} | numToAdd {numToAdd}");
+
+                    memoryGameSequence.Add(numToAdd);
+                    if (seenLast.ContainsKey(numToAdd))
+                        seenLast[numToAdd] = (i);
                     else
-                        memoryGameSequence.Add(i - (long)previousIndexOfPreviousStep);
+                        seenLast.Add(numToAdd, i);
+                    // }
                 }
                 else
-                    memoryGameSequence.Add(0);
-
-
-                List<long> repeatingSequence = LookForRepeatingSequence(memoryGameSequence);
-
-                if (repeatingSequence != null)
                 {
-
+                    seenLast[0] = i;
+                    memoryGameSequence.Add(0);
                 }
 
             }
 
+            Console.WriteLine(string.Join(',', memoryGameSequence));
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
         }
 
-        private static List<long> LookForRepeatingSequence(List<long> memoryGameSequence)
-        {
-            //string sequenceString = string.Join("", memoryGameSequence);
-
-            int length = 2;
-
-            for (int s = (int)(memoryGameSequence.Count() / 2); s > 0; s--)
-            {
-                List<long> patternToCheck = memoryGameSequence.GetRange((memoryGameSequence.Count() - (length + 1)), length);
-
-                List<long> remainderToCheck = memoryGameSequence.GetRange(0, (memoryGameSequence.Count() - (length + 1)));
-
-                if (remainderToCheck.Contains(patternToCheck))
-                {
-                    return patternToCheck;
-                }
-            }
-
-            return null;
-        }
 
         private static int? tryFindPreviousIndex(List<long> memoryGameSequence, long previousStep)
         {
