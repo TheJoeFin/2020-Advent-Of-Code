@@ -30,21 +30,21 @@ namespace _2020_Advent_Of_Code
 
             List<long> memoryGameSequence = new List<long>();
 
-            List<string> memoryGameSequenceRaw = InputString.Split(',').ToList();
+            List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
 
             foreach (string rawLine in memoryGameSequenceRaw)
             {
                 memoryGameSequence.Add(long.Parse(rawLine));
             }
 
-            for (int i = 2; i <= 10; i++)
+            for (int i = memoryGameSequence.Count() - 1; i <= (30000000 - 1); i++)
             {
                 long previousStep = memoryGameSequence[i];
 
                 int? previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence, previousStep);
                 // previousIndexOfPreviousStep;
 
-                Console.WriteLine($"{i} | {string.Join(',', memoryGameSequence)}");
+                // Console.WriteLine($"{i} | {string.Join(',', memoryGameSequence)}");
 
                 if (previousIndexOfPreviousStep != null)
                 {
@@ -58,9 +58,38 @@ namespace _2020_Advent_Of_Code
                 else
                     memoryGameSequence.Add(0);
 
+
+                List<long> repeatingSequence = LookForRepeatingSequence(memoryGameSequence);
+
+                if (repeatingSequence != null)
+                {
+
+                }
+
             }
 
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
+        }
+
+        private static List<long> LookForRepeatingSequence(List<long> memoryGameSequence)
+        {
+            //string sequenceString = string.Join("", memoryGameSequence);
+
+            int length = 2;
+
+            for (int s = (int)(memoryGameSequence.Count() / 2); s > 0; s--)
+            {
+                List<long> patternToCheck = memoryGameSequence.GetRange((memoryGameSequence.Count() - (length + 1)), length);
+
+                List<long> remainderToCheck = memoryGameSequence.GetRange(0, (memoryGameSequence.Count() - (length + 1)));
+
+                if (remainderToCheck.Contains(patternToCheck))
+                {
+                    return patternToCheck;
+                }
+            }
+
+            return null;
         }
 
         private static int? tryFindPreviousIndex(List<long> memoryGameSequence, long previousStep)
