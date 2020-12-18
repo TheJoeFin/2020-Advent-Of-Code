@@ -32,7 +32,7 @@ namespace _2020_Advent_Of_Code
 
             List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
 
-            Dictionary<long, long> seenLast = new Dictionary<long, long>();
+            Dictionary<long, List<long>> seenLast = new Dictionary<long, List<long>>();
 
             bool firstZero = true;
 
