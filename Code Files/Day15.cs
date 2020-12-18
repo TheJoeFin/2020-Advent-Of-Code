@@ -54,24 +54,43 @@ namespace _2020_Advent_Of_Code
                 if (previousIndexOfPreviousStep != null)
                 {
                     long numToAdd = i - (long)previousIndexOfPreviousStep;
-
                     // Console.WriteLine($"{i} | numToAdd {numToAdd}");
                     memoryGameSequence.Add(numToAdd);
                 }
                 else
                 {
                     memoryGameSequence.Add(0);
+                }
 
+                // Update the last seen dictionary
+                long justAdded = memoryGameSequence.Last();
+
+                if (previousIndexOfPreviousStep == null)
+                {
                     if (firstZero)
                         firstZero = false;
                     else
                     {
                         if (seenLast.ContainsKey(0))
-                            seenLast[0] = i;
+                            seenLast[0] = memoryGameSequence.Count() - 1;
                         else
-                            seenLast.Add(0, i);
+                            seenLast.Add(0, memoryGameSequence.Count() - 1);
                     }
                 }
+                else
+                {
+                    long numToAdd = i - (long)previousIndexOfPreviousStep;
+                    int? checkForLastSeen = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, numToAdd);
+
+                    if (checkForLastSeen != null)
+                    {
+                        if (seenLast.ContainsKey(numToAdd))
+                            seenLast[numToAdd] = memoryGameSequence.Count() - 1;
+                        else
+                            seenLast.Add(numToAdd, memoryGameSequence.Count() - 1);
+                    }
+                }
+
 
             }
 
@@ -86,7 +105,7 @@ namespace _2020_Advent_Of_Code
             if (seenLast.ContainsKey(previousStep))
             {
                 returnInt = (int?)seenLast[previousStep];
-                seenLast[previousStep] = subSequence.Count();
+                //seenLast[previousStep] = subSequence.Count();
                 return returnInt;
             }
 
@@ -94,7 +113,7 @@ namespace _2020_Advent_Of_Code
             {
                 if (subSequence[s] == previousStep)
                 {
-                    seenLast.Add(previousStep, s + 1);
+                    //seenLast.Add(previousStep, s + 1);
 
                     return s;
                 }
