@@ -30,9 +30,11 @@ namespace _2020_Advent_Of_Code
 
             List<long> memoryGameSequence = new List<long>();
 
-            List<string> memoryGameSequenceRaw = TestString1.Split(',').ToList();
+            List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
 
             Dictionary<long, long> seenLast = new Dictionary<long, long>();
+
+            bool firstZero = true;
 
             foreach (string rawLine in memoryGameSequenceRaw)
             {
@@ -51,8 +53,6 @@ namespace _2020_Advent_Of_Code
 
                 if (previousIndexOfPreviousStep != null)
                 {
-                    previousIndexOfPreviousStep++;
-
                     long numToAdd = i - (long)previousIndexOfPreviousStep;
 
                     // Console.WriteLine($"{i} | numToAdd {numToAdd}");
@@ -61,6 +61,16 @@ namespace _2020_Advent_Of_Code
                 else
                 {
                     memoryGameSequence.Add(0);
+
+                    if (firstZero)
+                        firstZero = false;
+                    else
+                    {
+                        if (seenLast.ContainsKey(0))
+                            seenLast[0] = i;
+                        else
+                            seenLast.Add(0, i);
+                    }
                 }
 
             }
@@ -69,23 +79,22 @@ namespace _2020_Advent_Of_Code
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
         }
 
-
-        private static int? tryFindPreviousIndex(List<long> memoryGameSequence, Dictionary<long, long> seenLast, long previousStep)
+        private static int? tryFindPreviousIndex(List<long> subSequence, Dictionary<long, long> seenLast, long previousStep)
         {
             int? returnInt = null;
 
             if (seenLast.ContainsKey(previousStep))
             {
                 returnInt = (int?)seenLast[previousStep];
-
+                seenLast[previousStep] = subSequence.Count();
                 return returnInt;
             }
 
-            for (int s = memoryGameSequence.Count - 1; s >= 0; s--)
+            for (int s = subSequence.Count - 1; s >= 0; s--)
             {
-                if (memoryGameSequence[s] == previousStep)
+                if (subSequence[s] == previousStep)
                 {
-                    seenLast.Add(previousStep, memoryGameSequence.Count - (s + 1));
+                    seenLast.Add(previousStep, s + 1);
 
                     return s;
                 }
