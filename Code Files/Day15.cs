@@ -30,7 +30,7 @@ namespace _2020_Advent_Of_Code
 
             List<long> memoryGameSequence = new List<long>();
 
-            List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
+            List<string> memoryGameSequenceRaw = TestString1.Split(',').ToList();
 
             Dictionary<long, long> seenLast = new Dictionary<long, long>();
 
@@ -39,38 +39,27 @@ namespace _2020_Advent_Of_Code
                 memoryGameSequence.Add(long.Parse(rawLine));
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (10 - 1); i++) // 30000000
+            for (int i = memoryGameSequence.Count() - 1; i <= (2020 - 1); i++) // 30000000
             {
                 long previousStep = memoryGameSequence[i];
 
                 int? previousIndexOfPreviousStep = null;
 
-                if (seenLast.ContainsKey(previousStep))
-                {
-                    previousIndexOfPreviousStep = (int?)seenLast[previousStep];
-                    Console.WriteLine($"{i} | seenLast contains {previousStep} at {previousIndexOfPreviousStep}");
-                }
-                else
-                    previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence, previousStep);
+                previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, previousStep);
 
-                Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
+                // Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
 
                 if (previousIndexOfPreviousStep != null)
                 {
+                    previousIndexOfPreviousStep++;
+
                     long numToAdd = i - (long)previousIndexOfPreviousStep;
 
-                    Console.WriteLine($"{i} | numToAdd {numToAdd}");
-
+                    // Console.WriteLine($"{i} | numToAdd {numToAdd}");
                     memoryGameSequence.Add(numToAdd);
-                    if (seenLast.ContainsKey(numToAdd))
-                        seenLast[numToAdd] = (i);
-                    else
-                        seenLast.Add(numToAdd, i);
-                    // }
                 }
                 else
                 {
-                    seenLast[0] = i;
                     memoryGameSequence.Add(0);
                 }
 
@@ -81,14 +70,25 @@ namespace _2020_Advent_Of_Code
         }
 
 
-        private static int? tryFindPreviousIndex(List<long> memoryGameSequence, long previousStep)
+        private static int? tryFindPreviousIndex(List<long> memoryGameSequence, Dictionary<long, long> seenLast, long previousStep)
         {
             int? returnInt = null;
 
-            for (int s = memoryGameSequence.Count - 2; s >= 0; s--)
+            if (seenLast.ContainsKey(previousStep))
+            {
+                returnInt = (int?)seenLast[previousStep];
+
+                return returnInt;
+            }
+
+            for (int s = memoryGameSequence.Count - 1; s >= 0; s--)
             {
                 if (memoryGameSequence[s] == previousStep)
+                {
+                    seenLast.Add(previousStep, memoryGameSequence.Count - (s + 1));
+
                     return s;
+                }
             }
 
             return returnInt;
