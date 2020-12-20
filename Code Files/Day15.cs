@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace _2020_Advent_Of_Code
 {
@@ -28,20 +29,22 @@ namespace _2020_Advent_Of_Code
 
             // Rambunctious Recitation
 
+            Stopwatch perfStopwatch = new Stopwatch();
+            perfStopwatch.Start();
+
             List<long> memoryGameSequence = new List<long>();
 
             List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
 
             Dictionary<long, List<long>> seenLast = new Dictionary<long, List<long>>();
 
-            bool firstZero = true;
-
             foreach (string rawLine in memoryGameSequenceRaw)
             {
                 memoryGameSequence.Add(long.Parse(rawLine));
+                updateIndexDictionary(memoryGameSequence, seenLast);
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (2020 - 1); i++) // 30000000
+            for (int i = memoryGameSequence.Count() - 1; i <= (20200 - 1); i++) // 30000000
             {
                 long previousStep = memoryGameSequence[i];
 
@@ -53,7 +56,7 @@ namespace _2020_Advent_Of_Code
 
                 if (previousIndexOfPreviousStep != null)
                 {
-                    long numToAdd = i - (long)previousIndexOfPreviousStep;
+                    long numToAdd = i - ((long)previousIndexOfPreviousStep);
                     // Console.WriteLine($"{i} | numToAdd {numToAdd}");
                     memoryGameSequence.Add(numToAdd);
                 }
@@ -63,48 +66,42 @@ namespace _2020_Advent_Of_Code
                 }
 
                 // Update the last seen dictionary
-                long justAdded = memoryGameSequence.Last();
-
-                if (previousIndexOfPreviousStep == null)
-                {
-                    if (firstZero)
-                        firstZero = false;
-                    else
-                    {
-                        if (seenLast.ContainsKey(0))
-                            seenLast[0] = memoryGameSequence.Count() - 1;
-                        else
-                            seenLast.Add(0, memoryGameSequence.Count() - 1);
-                    }
-                }
-                else
-                {
-                    long numToAdd = i - (long)previousIndexOfPreviousStep;
-                    int? checkForLastSeen = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, numToAdd);
-
-                    if (checkForLastSeen != null)
-                    {
-                        if (seenLast.ContainsKey(numToAdd))
-                            seenLast[numToAdd] = memoryGameSequence.Count() - 1;
-                        else
-                            seenLast.Add(numToAdd, memoryGameSequence.Count() - 1);
-                    }
-                }
+                updateIndexDictionary(memoryGameSequence, seenLast);
 
 
             }
 
-            Console.WriteLine(string.Join(',', memoryGameSequence));
+            perfStopwatch.Stop();
+
+            Console.WriteLine($"perf:{perfStopwatch.Elapsed.TotalSeconds}");
+            // Console.WriteLine(string.Join(',', memoryGameSequence));
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
         }
 
-        private static int? tryFindPreviousIndex(List<long> subSequence, Dictionary<long, long> seenLast, long previousStep)
+        private static void updateIndexDictionary(List<long> passedSequence, Dictionary<long, List<long>> passedDictionary)
+        {
+            long justAdded = passedSequence.Last();
+
+            if (passedDictionary.ContainsKey(justAdded))
+            {
+                passedDictionary[justAdded].Add(passedSequence.Count - 1);
+
+                if (passedDictionary[justAdded].Count() > 2)
+                    passedDictionary[justAdded].RemoveAt(0);
+            }
+            else
+            {
+                passedDictionary.Add(justAdded, new List<long> { passedSequence.Count - 1 });
+            }
+        }
+
+        private static int? tryFindPreviousIndex(List<long> subSequence, Dictionary<long, List<long>> seenLast, long previousStep)
         {
             int? returnInt = null;
 
-            if (seenLast.ContainsKey(previousStep))
+            if (seenLast.ContainsKey(previousStep) && seenLast[previousStep].Count > 1)
             {
-                returnInt = (int?)seenLast[previousStep];
+                returnInt = (int?)seenLast[previousStep].FirstOrDefault();
                 //seenLast[previousStep] = subSequence.Count();
                 return returnInt;
             }
