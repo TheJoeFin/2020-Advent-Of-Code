@@ -20,7 +20,7 @@ namespace _2020_Advent_Of_Code
 
         private const string dayNumber = "15";
 
-        private const string InputString = @"6,3,15,13,1,0";
+        private const string InputString = @"6,3,15,13,1,0"; // 700 then 51358
 
 
         public static void Run()
@@ -34,9 +34,9 @@ namespace _2020_Advent_Of_Code
 
             List<long> memoryGameSequence = new List<long>();
 
-            List<string> memoryGameSequenceRaw = TestString7.Split(',').ToList();
+            List<string> memoryGameSequenceRaw = InputString.Split(',').ToList();
 
-            Dictionary<long, List<long>> seenLast = new Dictionary<long, List<long>>();
+            SortedList<long, List<long>> seenLast = new SortedList<long, List<long>>();
 
             foreach (string rawLine in memoryGameSequenceRaw)
             {
@@ -44,7 +44,7 @@ namespace _2020_Advent_Of_Code
                 updateIndexDictionary(memoryGameSequence, seenLast);
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (20200 - 1); i++) // 30000000
+            for (int i = memoryGameSequence.Count() - 1; i <= (2020000 - 1); i++) // 30000000
             {
                 long previousStep = memoryGameSequence[i];
 
@@ -78,7 +78,7 @@ namespace _2020_Advent_Of_Code
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
         }
 
-        private static void updateIndexDictionary(List<long> passedSequence, Dictionary<long, List<long>> passedDictionary)
+        private static void updateIndexDictionary(List<long> passedSequence, SortedList<long, List<long>> passedDictionary)
         {
             long justAdded = passedSequence.Last();
 
@@ -95,7 +95,7 @@ namespace _2020_Advent_Of_Code
             }
         }
 
-        private static int? tryFindPreviousIndex(List<long> subSequence, Dictionary<long, List<long>> seenLast, long previousStep)
+        private static int? tryFindPreviousIndex(List<long> subSequence, SortedList<long, List<long>> seenLast, long previousStep)
         {
             int? returnInt = null;
 
