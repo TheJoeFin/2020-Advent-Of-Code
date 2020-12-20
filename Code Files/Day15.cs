@@ -36,7 +36,7 @@ namespace _2020_Advent_Of_Code
 
             List<string> memoryGameSequenceRaw = InputString.Split(',').ToList();
 
-            SortedList<long, List<long>> seenLast = new SortedList<long, List<long>>();
+            SortedList<long, HashSet<long>> seenLast = new SortedList<long, HashSet<long>>();
 
             foreach (string rawLine in memoryGameSequenceRaw)
             {
@@ -44,14 +44,13 @@ namespace _2020_Advent_Of_Code
                 updateIndexDictionary(memoryGameSequence, seenLast);
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (2020000 - 1); i++) // 30000000
+            for (int i = memoryGameSequence.Count() - 1; i <= (202000 - 1); i++) // 30000000
             {
                 long previousStep = memoryGameSequence[i];
 
                 int? previousIndexOfPreviousStep = null;
 
                 previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, previousStep);
-
                 // Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
 
                 if (previousIndexOfPreviousStep != null)
@@ -78,7 +77,7 @@ namespace _2020_Advent_Of_Code
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
         }
 
-        private static void updateIndexDictionary(List<long> passedSequence, SortedList<long, List<long>> passedDictionary)
+        private static void updateIndexDictionary(List<long> passedSequence, SortedList<long, HashSet<long>> passedDictionary)
         {
             long justAdded = passedSequence.Last();
 
@@ -91,11 +90,11 @@ namespace _2020_Advent_Of_Code
             }
             else
             {
-                passedDictionary.Add(justAdded, new List<long> { passedSequence.Count - 1 });
+                passedDictionary.Add(justAdded, new HashSet<long> { passedSequence.Count - 1 });
             }
         }
 
-        private static int? tryFindPreviousIndex(List<long> subSequence, SortedList<long, List<long>> seenLast, long previousStep)
+        private static int? tryFindPreviousIndex(List<long> subSequence, SortedList<long, HashSet<long>> seenLast, long previousStep)
         {
             int? returnInt = null;
 
@@ -104,16 +103,6 @@ namespace _2020_Advent_Of_Code
                 returnInt = (int?)seenLast[previousStep].FirstOrDefault();
                 //seenLast[previousStep] = subSequence.Count();
                 return returnInt;
-            }
-
-            for (int s = subSequence.Count - 1; s >= 0; s--)
-            {
-                if (subSequence[s] == previousStep)
-                {
-                    //seenLast.Add(previousStep, s + 1);
-
-                    return s;
-                }
             }
 
             return returnInt;
