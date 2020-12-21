@@ -44,7 +44,7 @@ namespace _2020_Advent_Of_Code
                 updateIndexDictionary(memoryGameSequence, seenLast);
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (202000 - 1); i++) // 30000000
+            for (int i = memoryGameSequence.Count() - 1; i <= (2020 - 1); i++) // 30000000
             {
                 long previousStep = memoryGameSequence[i];
 
@@ -77,6 +77,36 @@ namespace _2020_Advent_Of_Code
             Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
         }
 
+        private static void solve(long[] startingSeq, long n)
+        {
+            Console.WriteLine("Running Solve");
+
+            var history = new Dictionary<long, long[]>();
+
+            long? last = null;
+
+            for (long i = 0; i < startingSeq.Count(); i++)
+            {
+                long num = startingSeq[i];
+                history.Add(num, new long[2]);
+                history[num].Append(i);
+                last = num;
+            }
+
+            long count = startingSeq.Count();
+            while (count < n)
+            {
+                var positions = history.LastOrDefault();
+
+                if (positions.Value.Length == 1)
+                {
+                    var zeroPositions = history.FirstOrDefault();
+
+                }
+
+            }
+        }
+
         private static void updateIndexDictionary(List<long> passedSequence, SortedList<long, HashSet<long>> passedDictionary)
         {
             long justAdded = passedSequence.Last();
@@ -86,7 +116,10 @@ namespace _2020_Advent_Of_Code
                 passedDictionary[justAdded].Add(passedSequence.Count - 1);
 
                 if (passedDictionary[justAdded].Count() > 2)
-                    passedDictionary[justAdded].RemoveAt(0);
+                {
+                    var instance = passedDictionary[justAdded].First();
+                    passedDictionary[justAdded].Remove(instance);
+                }
             }
             else
             {
