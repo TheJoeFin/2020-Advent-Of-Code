@@ -79,6 +79,9 @@ namespace _2020_Advent_Of_Code
 
         private static void solve(long[] startingSeq, long n)
         {
+            // making a C# version of this JS solution:
+            // https://github.com/azablan/advent-of-code-2020/blob/main/walkthrough/d15/solution.js
+            
             Console.WriteLine("Running Solve");
 
             var history = new Dictionary<long, long[]>();
