@@ -10,7 +10,7 @@ namespace _2020_Advent_Of_Code
         static void Main(string[] args)
         {
             // Console.Clear();
-            Day16.Run();
+            Day15.Run();
         }
     }
 }

@@ -32,71 +32,100 @@ namespace _2020_Advent_Of_Code
             Stopwatch perfStopwatch = new Stopwatch();
             perfStopwatch.Start();
 
-            List<long> memoryGameSequence = new List<long>();
+            List<int> memoryGameSequence = new List<int>();
 
             List<string> memoryGameSequenceRaw = InputString.Split(',').ToList();
 
-            SortedList<long, HashSet<long>> seenLast = new SortedList<long, HashSet<long>>();
+            SortedList<int, int> seenLast = new SortedList<int, int>();
 
             foreach (string rawLine in memoryGameSequenceRaw)
             {
-                memoryGameSequence.Add(long.Parse(rawLine));
+                memoryGameSequence.Add(int.Parse(rawLine));
                 updateIndexDictionary(memoryGameSequence, seenLast);
             }
 
-            for (int i = memoryGameSequence.Count() - 1; i <= (2020 - 1); i++) // 30000000
+            int lastValue = memoryGameSequence.LastOrDefault();
+            int itt = memoryGameSequence.Count();
+
+            do
             {
-                long previousStep = memoryGameSequence[i];
-
-                int? previousIndexOfPreviousStep = null;
-
-                previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, previousStep);
-                // Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
-
-                if (previousIndexOfPreviousStep != null)
+                Console.WriteLine($"ITT:{itt} lastValue:{lastValue}");
+                if (seenLast.ContainsKey(lastValue))
                 {
-                    long numToAdd = i - ((long)previousIndexOfPreviousStep);
-                    // Console.WriteLine($"{i} | numToAdd {numToAdd}");
-                    memoryGameSequence.Add(numToAdd);
+                    lastValue = itt - seenLast[lastValue];
                 }
                 else
                 {
-                    memoryGameSequence.Add(0);
+                    lastValue = 0;
                 }
 
-                // Update the last seen dictionary
-                updateIndexDictionary(memoryGameSequence, seenLast);
+                // Update the seen dictionary 
+                if (seenLast.ContainsKey(lastValue))
+                {
+                    seenLast[lastValue] = (itt);
+                }
+                else
+                {
+                    seenLast.Add(lastValue, itt);
+                }
 
-
+                itt++;
             }
+            while (itt < 20 + 1);
+
+            // for (int i = memoryGameSequence.Count() - 1; i <= (202000 - 1); i++) // 30000000
+            // {
+            //     int previousStep = memoryGameSequence[i];
+
+            //     int? previousIndexOfPreviousStep = null;
+
+            //     previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, previousStep);
+            //     // Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
+
+            //     if (previousIndexOfPreviousStep != null)
+            //     {
+            //         int numToAdd = i - ((int)previousIndexOfPreviousStep);
+            //         // Console.WriteLine($"{i} | numToAdd {numToAdd}");
+            //         memoryGameSequence.Add(numToAdd);
+            //     }
+            //     else
+            //     {
+            //         memoryGameSequence.Add(0);
+            //     }
+
+            //     // Update the last seen dictionary
+            //     updateIndexDictionary(memoryGameSequence, seenLast);
+
+
+            // }
 
             perfStopwatch.Stop();
 
             Console.WriteLine($"perf:{perfStopwatch.Elapsed.TotalSeconds}");
             // Console.WriteLine(string.Join(',', memoryGameSequence));
-            Console.WriteLine($"The last entry in the memory game is {memoryGameSequence[memoryGameSequence.Count - 2]}");
+            Console.WriteLine($"The last entry in the memory game is {lastValue}");
         }
 
-        private static void solve(long[] startingSeq, long n)
+        private static void solve(int[] startingSeq, int n)
         {
             // making a C# version of this JS solution:
             // https://github.com/azablan/advent-of-code-2020/blob/main/walkthrough/d15/solution.js
-            
+
             Console.WriteLine("Running Solve");
 
-            var history = new Dictionary<long, long[]>();
+            var history = new Dictionary<int, int[]>();
 
-            long? last = null;
+            int? last = null;
 
-            for (long i = 0; i < startingSeq.Count(); i++)
+            for (int i = 0; i < startingSeq.Count(); i++)
             {
-                long num = startingSeq[i];
-                history.Add(num, new long[2]);
+                int num = startingSeq[i];
+                history.Add(num, new int[2]);
                 history[num].Append(i);
                 last = num;
             }
 
-            long count = startingSeq.Count();
+            int count = startingSeq.Count();
             while (count < n)
             {
                 var positions = history.LastOrDefault();
@@ -110,27 +139,21 @@ namespace _2020_Advent_Of_Code
             }
         }
 
-        private static void updateIndexDictionary(List<long> passedSequence, SortedList<long, HashSet<long>> passedDictionary)
+        private static void updateIndexDictionary(List<int> passedSequence, SortedList<int, int> passedDictionary)
         {
-            long justAdded = passedSequence.Last();
+            int justAdded = passedSequence.Last();
 
             if (passedDictionary.ContainsKey(justAdded))
             {
-                passedDictionary[justAdded].Add(passedSequence.Count - 1);
-
-                if (passedDictionary[justAdded].Count() > 2)
-                {
-                    var instance = passedDictionary[justAdded].First();
-                    passedDictionary[justAdded].Remove(instance);
-                }
+                passedDictionary[justAdded] = (passedSequence.Count - 1);
             }
             else
             {
-                passedDictionary.Add(justAdded, new HashSet<long> { passedSequence.Count - 1 });
+                passedDictionary.Add(justAdded, passedSequence.Count - 1);
             }
         }
 
-        private static int? tryFindPreviousIndex(List<long> subSequence, SortedList<long, HashSet<long>> seenLast, long previousStep)
+        private static int? tryFindPreviousIndex(List<int> subSequence, SortedList<int, HashSet<int>> seenLast, int previousStep)
         {
             int? returnInt = null;
 
