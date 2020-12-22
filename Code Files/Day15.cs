@@ -38,18 +38,25 @@ namespace _2020_Advent_Of_Code
 
             SortedList<int, int> seenLast = new SortedList<int, int>();
 
-            foreach (string rawLine in memoryGameSequenceRaw)
+            for (int r = 0; r < memoryGameSequenceRaw.Count(); r++)
             {
+                string rawLine = memoryGameSequenceRaw[r];
                 memoryGameSequence.Add(int.Parse(rawLine));
-                updateIndexDictionary(memoryGameSequence, seenLast);
+
+                if (r < memoryGameSequenceRaw.Count() - 1)
+                    updateIndexDictionary(memoryGameSequence, seenLast);
             }
 
             int lastValue = memoryGameSequence.LastOrDefault();
+            int prevValue = memoryGameSequence[memoryGameSequence.Count() - 2];
             int itt = memoryGameSequence.Count();
 
             do
             {
-                Console.WriteLine($"ITT:{itt} lastValue:{lastValue}");
+                prevValue = lastValue;
+
+                if (itt % 100000 == 0)
+                    Console.WriteLine($"ITT:{itt} lastValue:{lastValue}");
                 if (seenLast.ContainsKey(lastValue))
                 {
                     lastValue = itt - seenLast[lastValue];
@@ -60,18 +67,18 @@ namespace _2020_Advent_Of_Code
                 }
 
                 // Update the seen dictionary 
-                if (seenLast.ContainsKey(lastValue))
+                if (seenLast.ContainsKey(prevValue))
                 {
-                    seenLast[lastValue] = (itt);
+                    seenLast[prevValue] = (itt);
                 }
                 else
                 {
-                    seenLast.Add(lastValue, itt);
+                    seenLast.Add(prevValue, itt);
                 }
 
                 itt++;
             }
-            while (itt < 20 + 1);
+            while (itt < 30000000);
 
             // for (int i = memoryGameSequence.Count() - 1; i <= (202000 - 1); i++) // 30000000
             // {
@@ -145,11 +152,11 @@ namespace _2020_Advent_Of_Code
 
             if (passedDictionary.ContainsKey(justAdded))
             {
-                passedDictionary[justAdded] = (passedSequence.Count - 1);
+                passedDictionary[justAdded] = (passedSequence.Count);
             }
             else
             {
-                passedDictionary.Add(justAdded, passedSequence.Count - 1);
+                passedDictionary.Add(justAdded, passedSequence.Count);
             }
         }
 
