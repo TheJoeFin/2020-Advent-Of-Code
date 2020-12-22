@@ -56,7 +56,7 @@ namespace _2020_Advent_Of_Code
                 prevValue = lastValue;
 
                 if (itt % 100000 == 0)
-                    Console.WriteLine($"ITT:{itt} lastValue:{lastValue}");
+                    Console.WriteLine($"ITT:{String.Format("{0:n0}", itt)} lastValue:{lastValue}");
                 if (seenLast.ContainsKey(lastValue))
                 {
                     lastValue = itt - seenLast[lastValue];
