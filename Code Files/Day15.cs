@@ -20,7 +20,7 @@ namespace _2020_Advent_Of_Code
 
         private const string dayNumber = "15";
 
-        private const string InputString = @"6,3,15,13,1,0"; // 700 then 51358
+        private const string InputString = @"6,3,15,13,1,0"; // 700 then 51358 perf:589.0966811 (on codespaces)
 
 
         public static void Run()
@@ -80,70 +80,10 @@ namespace _2020_Advent_Of_Code
             }
             while (itt < 30000000);
 
-            // for (int i = memoryGameSequence.Count() - 1; i <= (202000 - 1); i++) // 30000000
-            // {
-            //     int previousStep = memoryGameSequence[i];
-
-            //     int? previousIndexOfPreviousStep = null;
-
-            //     previousIndexOfPreviousStep = tryFindPreviousIndex(memoryGameSequence.GetRange(0, memoryGameSequence.Count() - 1), seenLast, previousStep);
-            //     // Console.WriteLine($"{i} | PrevStep:{previousStep} PrevIndx:{previousIndexOfPreviousStep}");
-
-            //     if (previousIndexOfPreviousStep != null)
-            //     {
-            //         int numToAdd = i - ((int)previousIndexOfPreviousStep);
-            //         // Console.WriteLine($"{i} | numToAdd {numToAdd}");
-            //         memoryGameSequence.Add(numToAdd);
-            //     }
-            //     else
-            //     {
-            //         memoryGameSequence.Add(0);
-            //     }
-
-            //     // Update the last seen dictionary
-            //     updateIndexDictionary(memoryGameSequence, seenLast);
-
-
-            // }
-
             perfStopwatch.Stop();
 
             Console.WriteLine($"perf:{perfStopwatch.Elapsed.TotalSeconds}");
-            // Console.WriteLine(string.Join(',', memoryGameSequence));
             Console.WriteLine($"The last entry in the memory game is {lastValue}");
-        }
-
-        private static void solve(int[] startingSeq, int n)
-        {
-            // making a C# version of this JS solution:
-            // https://github.com/azablan/advent-of-code-2020/blob/main/walkthrough/d15/solution.js
-
-            Console.WriteLine("Running Solve");
-
-            var history = new Dictionary<int, int[]>();
-
-            int? last = null;
-
-            for (int i = 0; i < startingSeq.Count(); i++)
-            {
-                int num = startingSeq[i];
-                history.Add(num, new int[2]);
-                history[num].Append(i);
-                last = num;
-            }
-
-            int count = startingSeq.Count();
-            while (count < n)
-            {
-                var positions = history.LastOrDefault();
-
-                if (positions.Value.Length == 1)
-                {
-                    var zeroPositions = history.FirstOrDefault();
-
-                }
-
-            }
         }
 
         private static void updateIndexDictionary(List<int> passedSequence, SortedList<int, int> passedDictionary)
@@ -158,20 +98,6 @@ namespace _2020_Advent_Of_Code
             {
                 passedDictionary.Add(justAdded, passedSequence.Count);
             }
-        }
-
-        private static int? tryFindPreviousIndex(List<int> subSequence, SortedList<int, HashSet<int>> seenLast, int previousStep)
-        {
-            int? returnInt = null;
-
-            if (seenLast.ContainsKey(previousStep) && seenLast[previousStep].Count > 1)
-            {
-                returnInt = (int?)seenLast[previousStep].FirstOrDefault();
-                //seenLast[previousStep] = subSequence.Count();
-                return returnInt;
-            }
-
-            return returnInt;
         }
     }
 }
