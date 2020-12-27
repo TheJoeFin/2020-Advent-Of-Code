@@ -40,6 +40,56 @@ nearby tickets:
 
             string inputString = File.ReadAllText($"Input Files/Day{dayNumber}Input.txt");
 
+            // Parse inputs
+
+            string[] inputArray = TestString.Split("\r\n\r");
+
+            string rawRules = inputArray[0].Trim();
+            string rawYourTicket = inputArray[1].Trim();
+            string rawNearbyTickets = inputArray[2].Trim();
+
+            List<int[]> rules = new List<int[]>();
+            List<int> yourTicket = new List<int>();
+            List<int> nearByTickets = new List<int>();
+
+            foreach (string rulesLine in rawRules.ReadLines())
+            {
+                string[] rawLineArray = rulesLine.Split();
+
+                string[] Rule1stringArr = rawLineArray[1].Split('-');
+                string[] Rule2stringArr = rawLineArray[3].Split('-');
+
+                int[] rule1 = new int[2];
+                rule1[0] = int.Parse(Rule1stringArr[0]);
+                rule1[1] = int.Parse(Rule1stringArr[1]);
+                rules.Add(rule1);
+
+                int[] rule2 = new int[2];
+                rule2[0] = int.Parse(Rule2stringArr[0]);
+                rule2[1] = int.Parse(Rule2stringArr[1]);
+                rules.Add(rule2);
+            }
+
+            string[] rawYourNumbers = rawYourTicket.Split('\n').Last().Split(',');
+            foreach (string rawNumb in rawYourNumbers)
+                yourTicket.Add(int.Parse(rawNumb));
+
+            foreach (string rawNearbyLine in rawNearbyTickets.ReadLines())
+            {
+                if (rawNearbyLine.Contains("tickets"))
+                    continue;
+
+                string[] rawNumbers = rawNearbyLine.Split(',');
+
+                foreach (string rawNum in rawNumbers)
+                    nearByTickets.Add(int.Parse(rawNum));
+            }
+
+
+            // Start evaulating rules
+            List<int> invalidTickets = new List<int>();
+
+
 
         }
     }
