@@ -42,7 +42,7 @@ nearby tickets:
 
             // Parse inputs
 
-            string[] inputArray = TestString.Split("\r\n\r");
+            string[] inputArray = inputString.Split("\r\n\r");
 
             string rawRules = inputArray[0].Trim();
             string rawYourTicket = inputArray[1].Trim();
@@ -50,11 +50,11 @@ nearby tickets:
 
             List<int[]> rules = new List<int[]>();
             List<int> yourTicket = new List<int>();
-            List<int> nearByTickets = new List<int>();
+            List<int> nearbyTickets = new List<int>();
 
             foreach (string rulesLine in rawRules.ReadLines())
             {
-                string[] rawLineArray = rulesLine.Split();
+                string[] rawLineArray = rulesLine.Split(':').Last().Split();
 
                 string[] Rule1stringArr = rawLineArray[1].Split('-');
                 string[] Rule2stringArr = rawLineArray[3].Split('-');
@@ -82,14 +82,34 @@ nearby tickets:
                 string[] rawNumbers = rawNearbyLine.Split(',');
 
                 foreach (string rawNum in rawNumbers)
-                    nearByTickets.Add(int.Parse(rawNum));
+                    nearbyTickets.Add(int.Parse(rawNum));
             }
 
 
             // Start evaulating rules
-            List<int> invalidTickets = new List<int>();
+            HashSet<int> invalidTickets = new HashSet<int>();
 
+            foreach (int nearbyTicket in nearbyTickets)
+            {
+                bool meetsRules = false;
 
+                foreach (int[] rule in rules)
+                {
+                    if (nearbyTicket >= rule[0] && nearbyTicket <= rule[1])
+                        meetsRules = true;
+                }
+
+                if (meetsRules == false)
+                    invalidTickets.Add(nearbyTicket);
+
+            }
+
+            int errorRate = 0;
+
+            foreach (int invalidTicket in invalidTickets)
+                errorRate += invalidTicket;
+
+            Console.WriteLine($"The ticket scanning error rate is: {errorRate}");
 
         }
     }
